@@ -3,8 +3,18 @@ const nextConfig = {
   output: 'export',
   trailingSlash: true,
   images: { unoptimized: true },
+  // Turbopack: mock Node-only modules that mapbox-gl references but never runs in the browser
+  experimental: {
+    turbo: {
+      resolveAliases: {
+        fs: { browser: './lib/empty-module.js' },
+        net: { browser: './lib/empty-module.js' },
+        tls: { browser: './lib/empty-module.js' },
+      },
+    },
+  },
+  // Webpack fallback kept for `next build`
   webpack: (config) => {
-    // mapbox-gl uses browser-only APIs — tell webpack not to bundle Node-only fallbacks
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
