@@ -11,33 +11,32 @@ import ReportPanel from './ReportPanel';
 const GujaratMap = dynamic(() => import('./GujaratMap'), { ssr: false });
 
 export default function MapApp() {
-  const [activeEra, setActiveEra]       = useState(0);
-  const [markers,   setMarkers]         = useState([]);
+  const [activeEra,    setActiveEra]    = useState(0);
+  const [markers,      setMarkers]      = useState([]);
   const [activeMarker, setActiveMarker] = useState(null);
-  const [showAbout, setShowAbout]       = useState(false);
+  const [showAbout,    setShowAbout]    = useState(false);
 
   useEffect(() => {
     fetchAllMarkers().then(setMarkers).catch(console.error);
   }, []);
 
-  const handleEraChange = useCallback((idx) => {
-    setActiveEra(idx);
-    setActiveMarker(null);
-  }, []);
+  const handleEraChange    = useCallback((idx) => { setActiveEra(idx); setActiveMarker(null); }, []);
+  const handleMarkerClick  = useCallback((m) => setActiveMarker(m), []);
+  const handlePanelClose   = useCallback(() => setActiveMarker(null), []);
 
-  const handleMarkerClick = useCallback((m) => setActiveMarker(m), []);
-  const handlePanelClose  = useCallback(() => setActiveMarker(null), []);
-
-  const era        = ERAS[activeEra];
-  const panelOpen  = Boolean(activeMarker);
+  const era       = ERAS[activeEra];
+  const panelOpen = Boolean(activeMarker);
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden" style={{ background: 'var(--surface)' }}>
-
+    <div
+      className="relative h-screen w-screen overflow-hidden"
+      style={{ background: 'var(--indigo-900)' }}
+    >
       {/* ── Map ── */}
       <GujaratMap
         markers={markers}
         activeEra={activeEra}
+        activeMarkerId={activeMarker?._id}
         onMarkerClick={handleMarkerClick}
       />
 
@@ -46,44 +45,63 @@ export default function MapApp() {
         className="absolute top-0 left-0 right-0 z-20 flex items-center px-7 gap-4"
         style={{
           height: 52,
-          background: 'rgba(26,26,72,0.96)',
+          background: 'rgba(17,16,58,0.96)',
           backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          borderBottom: '1px solid rgba(245,239,226,0.07)',
         }}
       >
-        {/* Site name */}
+        {/* ગુજરાત — Tiro Gujarati */}
         <span
-          className="text-[22px] leading-none"
-          style={{ fontFamily: 'var(--font-guj)', color: 'var(--cream)' }}
+          style={{
+            fontFamily: 'var(--font-guj)',
+            fontSize: 22,
+            lineHeight: 1,
+            color: 'var(--cream-100)',
+          }}
         >
           ગુજરાત
         </span>
-        <span className="w-px h-[22px] flex-none" style={{ background: 'rgba(255,255,255,0.15)' }} />
+
+        {/* Divider */}
         <span
-          className="text-[13px] italic tracking-[0.06em]"
-          style={{ fontFamily: 'var(--font-eng)', color: 'rgba(245,239,226,0.5)' }}
+          className="flex-none"
+          style={{ width: 1, height: 22, background: 'rgba(245,239,226,0.15)' }}
+        />
+
+        {/* Gujarat — Across Time — Inter (UI label at this size) */}
+        <span
+          style={{
+            fontFamily: 'var(--font-ui)',
+            fontSize: 12,
+            letterSpacing: '0.08em',
+            color: 'rgba(245,239,226,0.45)',
+          }}
         >
           Gujarat — Across Time
         </span>
 
-        {/* Spacer */}
         <div className="flex-1" />
 
         {/* Marker legend (desktop) */}
-        <div className="hidden md:flex items-center gap-4 mr-2">
+        <div className="hidden md:flex items-center gap-5 mr-2">
           {[
-            { type: 'person', bg: 'var(--indigo)',  label: 'Person' },
-            { type: 'place',  bg: 'var(--rust)',    label: 'Place'  },
-            { type: 'event',  bg: '#2A5C45',        label: 'Event'  },
-          ].map(({ type, bg, label }) => (
-            <div key={type} className="flex items-center gap-1.5">
+            { bg: 'var(--marker-person)', label: 'Person' },
+            { bg: 'var(--marker-place)',  label: 'Place'  },
+            { bg: 'var(--marker-event)',  label: 'Event'  },
+          ].map(({ bg, label }) => (
+            <div key={label} className="flex items-center gap-1.5">
               <span
                 className="w-2.5 h-2.5 rounded-full flex-none"
                 style={{ background: bg }}
               />
               <span
-                className="text-[11px] tracking-[0.08em] uppercase"
-                style={{ fontFamily: 'var(--font-eng)', color: 'rgba(245,239,226,0.5)' }}
+                style={{
+                  fontFamily: 'var(--font-ui)',
+                  fontSize: 10,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(245,239,226,0.4)',
+                }}
               >
                 {label}
               </span>
@@ -91,15 +109,23 @@ export default function MapApp() {
           ))}
         </div>
 
-        {/* Era badge */}
+        {/* Era badge — gold, Inter small-caps */}
         <button
           onClick={() => setShowAbout(true)}
-          className="hidden sm:flex items-center px-3.5 py-1.5 border text-[11px] tracking-[0.18em] uppercase transition-all duration-300"
           style={{
-            fontFamily: 'var(--font-eng)',
+            fontFamily: 'var(--font-ui)',
+            fontSize: 10,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
             color: 'var(--gold)',
-            borderColor: 'rgba(196,149,50,0.4)',
+            padding: '5px 14px',
+            border: '1px solid rgba(196,149,50,0.4)',
+            background: 'none',
+            cursor: 'pointer',
+            transition: 'border-color 0.2s, color 0.2s',
           }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(196,149,50,0.7)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(196,149,50,0.4)'; }}
           title="About this map"
         >
           {era.shortLabel} · {era.period}
@@ -110,50 +136,91 @@ export default function MapApp() {
       {showAbout && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(14,14,40,0.7)', backdropFilter: 'blur(6px)' }}
+          style={{ background: 'rgba(17,16,58,0.75)', backdropFilter: 'blur(6px)' }}
           onClick={() => setShowAbout(false)}
         >
           <div
             className="max-w-sm w-full p-8 space-y-4"
-            style={{ background: 'var(--cream)' }}
+            style={{ background: 'var(--cream-50)', border: '1px solid rgba(26,26,72,0.12)' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2
-              className="text-xl"
-              style={{ fontFamily: 'var(--font-eng)', color: 'var(--indigo)' }}
+            <p
+              style={{
+                fontFamily: 'var(--font-ui)',
+                fontSize: 10,
+                letterSpacing: '0.28em',
+                textTransform: 'uppercase',
+                color: 'var(--accent)',
+                fontWeight: 500,
+              }}
             >
-              Gujarat — Across Time
+              About this map
+            </p>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontVariationSettings: '"opsz" 144',
+                fontSize: 32,
+                fontWeight: 400,
+                lineHeight: 1.1,
+                letterSpacing: '-0.02em',
+                color: 'var(--indigo-900)',
+              }}
+            >
+              Gujarat —<br />
+              <em style={{ fontStyle: 'italic', fontWeight: 300, color: 'var(--accent)' }}>
+                Across Time
+              </em>
             </h2>
             <p
-              className="text-[15px] leading-relaxed"
-              style={{ fontFamily: 'var(--font-body)', color: '#3a3a6a' }}
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 17,
+                lineHeight: 1.65,
+                fontStyle: 'italic',
+                color: 'var(--muted-on-light)',
+              }}
             >
               An interactive historical map exploring Gujarat across five eras — from the Solanki
-              golden age and its poets, through the Sultanate, Mughal rule, and the nationalist
+              golden age and its poets, through Sultanate, Mughal rule, and the nationalist
               movement, to the modern state.
             </p>
             <p
-              className="text-[13px] leading-relaxed"
-              style={{ fontFamily: 'var(--font-body)', color: 'var(--muted)' }}
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 15,
+                lineHeight: 1.6,
+                color: 'var(--muted-on-light)',
+              }}
             >
-              Click any marker to read more. Use the era navigator at the bottom, or press the
-              ← → arrow keys to travel through time. Historical borders are approximate.
+              Click any marker to read more. Use the era navigator at the bottom, or press{' '}
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>← →</span>{' '}
+              to travel through time. Historical borders are approximate.
             </p>
-            <div className="h-px" style={{ background: 'rgba(26,26,72,0.1)' }} />
+            <div style={{ height: 1, background: 'rgba(26,26,72,0.1)' }} />
             <p
-              className="text-[10px] tracking-widest uppercase"
-              style={{ fontFamily: 'var(--font-eng)', color: 'var(--muted)' }}
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                color: 'var(--muted-on-light)',
+                letterSpacing: '0.04em',
+              }}
             >
-              Built with Mapbox GL JS · Next.js · Sanity CMS
+              Mapbox GL JS · Next.js · Sanity CMS
             </p>
             <button
               onClick={() => setShowAbout(false)}
-              className="w-full py-2.5 text-[11px] tracking-[0.18em] uppercase border transition-all duration-200"
               style={{
-                fontFamily: 'var(--font-eng)',
-                background: 'var(--indigo)',
-                color: 'var(--cream)',
-                borderColor: 'var(--indigo)',
+                width: '100%',
+                padding: '10px',
+                fontFamily: 'var(--font-ui)',
+                fontSize: 10,
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                background: 'var(--indigo-900)',
+                color: 'var(--cream-100)',
+                border: 'none',
+                cursor: 'pointer',
               }}
             >
               Close
@@ -162,26 +229,31 @@ export default function MapApp() {
         </div>
       )}
 
-      {/* ── Marker legend (mobile) ── */}
+      {/* ── Mobile legend ── */}
       <div
-        className="md:hidden absolute left-4 z-20 flex flex-col gap-1.5 p-2.5"
+        className="md:hidden absolute left-4 z-20 flex flex-col gap-2 p-3"
         style={{
-          bottom: 120,
-          background: 'rgba(26,26,72,0.9)',
+          bottom: 116,
+          background: 'rgba(17,16,58,0.9)',
           backdropFilter: 'blur(8px)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          border: '1px solid rgba(245,239,226,0.07)',
         }}
       >
         {[
-          { bg: 'var(--indigo)', label: 'Person' },
-          { bg: 'var(--rust)',   label: 'Place'  },
-          { bg: '#2A5C45',       label: 'Event'  },
+          { bg: 'var(--marker-person)', label: 'Person' },
+          { bg: 'var(--marker-place)',  label: 'Place'  },
+          { bg: 'var(--marker-event)',  label: 'Event'  },
         ].map(({ bg, label }) => (
           <div key={label} className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full flex-none" style={{ background: bg }} />
             <span
-              className="text-[10px] tracking-widest uppercase"
-              style={{ fontFamily: 'var(--font-eng)', color: 'rgba(245,239,226,0.55)' }}
+              style={{
+                fontFamily: 'var(--font-ui)',
+                fontSize: 10,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: 'rgba(245,239,226,0.5)',
+              }}
             >
               {label}
             </span>
@@ -192,7 +264,7 @@ export default function MapApp() {
       {/* ── Side panel ── */}
       <SidePanel marker={activeMarker} onClose={handlePanelClose} />
 
-      {/* ── Era navigator — shifts left when panel is open ── */}
+      {/* ── Era navigator ── */}
       <EraNavigator
         activeEra={activeEra}
         onChange={handleEraChange}

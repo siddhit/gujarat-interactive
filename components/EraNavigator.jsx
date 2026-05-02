@@ -3,6 +3,9 @@
 import { useEffect } from 'react';
 import { ERAS } from '../data/eras';
 
+// Tick positions as fractions of 4 equal intervals
+const TICK_POSITIONS = [0, 25, 50, 75, 100];
+
 export default function EraNavigator({ activeEra, onChange, panelOpen }) {
   // Keyboard navigation
   useEffect(() => {
@@ -18,7 +21,7 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
 
   return (
     <div
-      className="absolute bottom-0 z-20 flex flex-col"
+      className="absolute bottom-0 z-20"
       style={{
         left: 0,
         right: panelOpen ? 'var(--panel-w)' : 0,
@@ -26,22 +29,33 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
       }}
     >
       <nav
-        className="flex flex-col"
+        role="tablist"
+        aria-label="Historical eras"
         style={{
-          background: 'rgba(26,26,72,0.97)',
+          background: 'rgba(17,16,58,0.97)',
           backdropFilter: 'blur(16px)',
-          borderTop: '1px solid rgba(255,255,255,0.07)',
-          padding: '0 52px',
-          paddingBottom: '12px',
-          paddingTop: '10px',
-          gap: '10px',
+          borderTop: '1px solid rgba(245,239,226,0.07)',
+          padding: '0 52px 14px',
+          position: 'relative',
         }}
       >
-        {/* Era label buttons */}
+        {/* Patola lattice texture on the bar */}
         <div
-          className="flex justify-between items-end"
-          role="tablist"
-          aria-label="Historical eras"
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'var(--patola-bg-dark)',
+            backgroundSize: '40px 40px',
+            opacity: 0.14,
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Era labels */}
+        <div
+          className="relative z-10 flex justify-between items-end"
+          style={{ paddingTop: 20, marginBottom: 14 }}
         >
           {ERAS.map((era, idx) => {
             const isActive = idx === activeEra;
@@ -51,48 +65,105 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
                 role="tab"
                 aria-selected={isActive}
                 onClick={() => onChange(idx)}
-                className={`era-step flex-1 flex flex-col items-center text-center
-                  transition-colors duration-200 pb-1
-                  ${isActive ? 'era-active' : ''}`}
-                style={{
-                  fontFamily: 'var(--font-eng)',
-                  fontSize: 10,
-                  letterSpacing: '0.10em',
-                  textTransform: 'uppercase',
-                  color: isActive ? 'var(--gold)' : 'rgba(245,239,226,0.25)',
-                }}
+                className={`era-step flex-1 flex flex-col items-center text-center pb-1 ${isActive ? 'era-active' : ''}`}
+                style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
               >
+                {/* Year — Fraunces italic */}
                 <span
-                  className="block text-xs italic mb-0.5"
-                  style={{ letterSpacing: '0.04em' }}
+                  style={{
+                    display: 'block',
+                    fontFamily: 'var(--font-display)',
+                    fontStyle: 'italic',
+                    fontSize: 13,
+                    fontVariationSettings: '"opsz" 72',
+                    letterSpacing: 0,
+                    marginBottom: 5,
+                    color: isActive ? 'var(--gold-soft)' : 'rgba(245,239,226,0.35)',
+                    transition: 'color 0.25s ease',
+                  }}
                 >
                   {era.period}
                 </span>
-                <span>{era.shortLabel}</span>
+                {/* Label — Inter small caps */}
+                <span
+                  style={{
+                    fontFamily: 'var(--font-ui)',
+                    fontSize: 10,
+                    letterSpacing: '0.10em',
+                    textTransform: 'uppercase',
+                    color: isActive ? 'var(--gold)' : 'rgba(245,239,226,0.28)',
+                    transition: 'color 0.25s ease',
+                  }}
+                >
+                  {era.shortLabel}
+                </span>
               </button>
             );
           })}
         </div>
 
-        {/* Progress track */}
-        <div className="relative h-0.5 bg-white/10 mx-0">
-          {/* Filled portion */}
+        {/* Track + fill + ticks + thumb */}
+        <div className="relative z-10" style={{ height: 16 }}>
+          {/* Track hairline */}
           <div
-            className="absolute left-0 top-0 h-full"
             style={{
-              width: `${sliderPct}%`,
-              background: 'linear-gradient(to right, var(--rust), var(--gold))',
-              transition: 'width 0.4s ease',
+              position: 'absolute',
+              top: 7,
+              left: 0,
+              right: 0,
+              height: 1,
+              background: 'rgba(245,239,226,0.14)',
             }}
           />
-          {/* Thumb dot */}
+
+          {/* Fill gradient — madder → terracotta → gold */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 transition-all duration-300"
             style={{
+              position: 'absolute',
+              top: 7,
+              left: 0,
+              height: 1,
+              width: `${sliderPct}%`,
+              background: 'linear-gradient(90deg, #6B1F2E, #B04E18 40%, #C49532 100%)',
+              transition: 'width 400ms cubic-bezier(0.32, 0.72, 0.24, 1.1)',
+            }}
+          />
+
+          {/* Tick marks */}
+          {TICK_POSITIONS.map((pct, i) => {
+            const isActiveTick = i === activeEra;
+            return (
+              <div
+                key={pct}
+                style={{
+                  position: 'absolute',
+                  left: `${pct}%`,
+                  top: isActiveTick ? 3 : 4,
+                  width: 1,
+                  height: isActiveTick ? 9 : 7,
+                  background: isActiveTick ? 'var(--gold)' : 'rgba(245,239,226,0.25)',
+                  transform: 'translateX(-50%)',
+                  transition: 'background 0.25s ease, height 0.25s ease, top 0.25s ease',
+                }}
+              />
+            );
+          })}
+
+          {/* Thumb — zari gold with glow */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
               left: `${sliderPct}%`,
+              transform: 'translate(-50%, -50%)',
+              width: 16,
+              height: 16,
+              borderRadius: '50%',
               background: 'var(--gold)',
-              borderColor: 'var(--indigo)',
-              boxShadow: '0 0 0 3px rgba(196,149,50,0.35)',
+              border: '2px solid var(--indigo-900)',
+              boxShadow: '0 0 0 3px rgba(196,149,50,0.22), 0 0 20px rgba(196,149,50,0.5)',
+              transition: 'left 400ms cubic-bezier(0.32, 0.72, 0.24, 1.1)',
+              pointerEvents: 'none',
             }}
           />
         </div>

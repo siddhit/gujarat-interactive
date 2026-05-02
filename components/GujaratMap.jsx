@@ -5,33 +5,54 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { ERAS } from '../data/eras';
 
-// Emoji icons matching the HTML mock's design language
-const TYPE_ICONS = {
-  person: '✍',
-  place:  '🏛',
-  event:  '◎',
+// ── SVG marker icons from the Visual Identity spec ───────────────────────────
+// Person: pen-stroke on madder (#6B1F2E)
+// Place:  stepped-well on terracotta (#B04E18)
+// Event:  concentric ripple on peacock teal (#1B5A66)
+
+const MARKER_SVGS = {
+  person: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="28" fill="#6B1F2E"/>
+    <circle cx="32" cy="32" r="28" fill="none" stroke="#F5EFE2" stroke-opacity="0.25" stroke-width="1.5"/>
+    <path d="M22 42 L28 24 L34 30 L40 22" stroke="#F5EFE2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="40" cy="22" r="1.8" fill="#C49532"/>
+  </svg>`,
+
+  place: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="28" fill="#B04E18"/>
+    <circle cx="32" cy="32" r="28" fill="none" stroke="#F5EFE2" stroke-opacity="0.25" stroke-width="1.5"/>
+    <path d="M22 42 L22 38 L26 38 L26 34 L30 34 L30 30 L34 30 L34 34 L38 34 L38 38 L42 38 L42 42 Z" fill="#F5EFE2"/>
+    <rect x="30" y="38" width="4" height="4" fill="#B04E18"/>
+  </svg>`,
+
+  event: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="28" fill="#1B5A66"/>
+    <circle cx="32" cy="32" r="28" fill="none" stroke="#F5EFE2" stroke-opacity="0.25" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="14" fill="none" stroke="#F5EFE2" stroke-width="1.2" opacity="0.4"/>
+    <circle cx="32" cy="32" r="9"  fill="none" stroke="#F5EFE2" stroke-width="1.2" opacity="0.7"/>
+    <circle cx="32" cy="32" r="3.5" fill="#F5EFE2"/>
+  </svg>`,
 };
 
 function buildMarkerEl(marker) {
   const el = document.createElement('div');
-  el.className = `gujarat-marker type-${marker.type} marker-enter`;
+  el.className = 'gujarat-marker marker-enter';
   el.title = marker.title_eng;
-  el.innerHTML = TYPE_ICONS[marker.type] ?? '•';
+  el.innerHTML = MARKER_SVGS[marker.type] ?? MARKER_SVGS.place;
   el.setAttribute('data-id', marker._id);
   return el;
 }
 
-export default function GujaratMap({ markers, activeEra, onMarkerClick }) {
+export default function GujaratMap({ markers, activeEra, activeMarkerId, onMarkerClick }) {
   const containerRef = useRef(null);
   const mapRef       = useRef(null);
-  const mbMarkersRef = useRef([]);
+  const mbMarkersRef = useRef([]);  // { el, mbMarker, id }
   const prevEraRef   = useRef(null);
   const readyRef     = useRef(false);
 
   // ── Init map ───────────────────────────────────────────────────────────────
   useEffect(() => {
     if (mapRef.current) return;
-
     const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
     if (!token) return;
 
@@ -53,13 +74,11 @@ export default function GujaratMap({ markers, activeEra, onMarkerClick }) {
     map.addControl(new mapboxgl.ScaleControl({ unit: 'metric' }), 'bottom-right');
 
     map.on('load', () => {
-      // Add a source + fill + stroke layer per era
       ERAS.forEach((era) => {
         map.addSource(`era-${era.id}-src`, {
           type: 'geojson',
           data: `/geojson/era-${era.id}.geojson`,
         });
-
         map.addLayer({
           id: `era-${era.id}-fill`,
           type: 'fill',
@@ -70,7 +89,6 @@ export default function GujaratMap({ markers, activeEra, onMarkerClick }) {
             'fill-opacity-transition': { duration: 600, delay: 0 },
           },
         });
-
         map.addLayer({
           id: `era-${era.id}-line`,
           type: 'line',
@@ -95,11 +113,18 @@ export default function GujaratMap({ markers, activeEra, onMarkerClick }) {
     };
   }, []);
 
-  // ── Remove all markers (with optional CSS exit animation) ─────────────────
+  // ── Sync selected marker ring ──────────────────────────────────────────────
+  useEffect(() => {
+    mbMarkersRef.current.forEach(({ el, id }) => {
+      el.classList.toggle('marker-selected', id === activeMarkerId);
+    });
+  }, [activeMarkerId]);
+
+  // ── Clear markers ──────────────────────────────────────────────────────────
   const clearMarkers = useCallback((animate) => {
     mbMarkersRef.current.forEach(({ el, mbMarker }) => {
       if (animate) {
-        el.classList.remove('marker-active', 'marker-pulse');
+        el.classList.remove('marker-active', 'marker-pulse', 'marker-selected');
         el.classList.add('marker-exit');
         setTimeout(() => mbMarker.remove(), 220);
       } else {
@@ -122,13 +147,13 @@ export default function GujaratMap({ markers, activeEra, onMarkerClick }) {
 
       el.addEventListener('click', (e) => { e.stopPropagation(); onMarkerClick(m); });
 
-      // Wait for exit animation (220ms) + staggered offset (80ms each)
+      // Stagger: wait for exit (220ms) + stagger
       setTimeout(() => {
         el.classList.remove('marker-enter');
         el.classList.add('marker-active', 'marker-pulse');
       }, 280 + i * 80);
 
-      mbMarkersRef.current.push({ el, mbMarker });
+      mbMarkersRef.current.push({ el, mbMarker, id: m._id });
     });
   }, [onMarkerClick]);
 
@@ -137,25 +162,19 @@ export default function GujaratMap({ markers, activeEra, onMarkerClick }) {
     const map = mapRef.current;
     if (!map) return;
 
-    // Fade out previous borders
     if (prevEraRef.current !== null) {
       map.setPaintProperty(`era-${prevEraRef.current}-fill`, 'fill-opacity', 0);
       map.setPaintProperty(`era-${prevEraRef.current}-line`, 'line-opacity', 0);
     }
-
-    // Fade in new borders
     const era = ERAS[eraIdx];
     if (era) {
       map.setPaintProperty(`era-${eraIdx}-fill`, 'fill-opacity', era.fillOpacity);
       map.setPaintProperty(`era-${eraIdx}-line`, 'line-opacity', 0.75);
     }
-
     prevEraRef.current = eraIdx;
 
-    // Swap markers
     clearMarkers(true);
-    const filtered = markers.filter((m) => m.eras.includes(eraIdx));
-    addMarkers(filtered);
+    addMarkers(markers.filter((m) => m.eras.includes(eraIdx)));
   }, [markers, clearMarkers, addMarkers]);
 
   useEffect(() => {
@@ -164,24 +183,18 @@ export default function GujaratMap({ markers, activeEra, onMarkerClick }) {
       mapRef.current?.on('gujarat:ready', onReady);
       return () => mapRef.current?.off('gujarat:ready', onReady);
     }
-    if (mapRef.current?.isStyleLoaded()) {
-      applyEra(activeEra);
-    }
+    if (mapRef.current?.isStyleLoaded()) applyEra(activeEra);
   }, [activeEra, markers, applyEra]);
 
   return (
     <div ref={containerRef} className="absolute inset-0">
       {!process.env.NEXT_PUBLIC_MAPBOX_TOKEN && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#0e0e28]">
-          <div className="text-center px-8 space-y-2">
-            <p className="text-sm text-cream/50" style={{ fontFamily: 'var(--font-eng)' }}>
-              Set{' '}
-              <code className="text-[#C49532]">NEXT_PUBLIC_MAPBOX_TOKEN</code>
-              {' '}in{' '}
-              <code className="text-[#C49532]">.env.local</code>
-              {' '}to load the map.
-            </p>
-          </div>
+        <div className="absolute inset-0 z-10 flex items-center justify-center"
+          style={{ background: 'var(--indigo-900)' }}>
+          <p className="text-sm text-center px-8" style={{ fontFamily: 'var(--font-ui)', color: 'rgba(245,239,226,0.4)', letterSpacing: '0.06em' }}>
+            Set <code style={{ color: 'var(--gold)' }}>NEXT_PUBLIC_MAPBOX_TOKEN</code> in{' '}
+            <code style={{ color: 'var(--gold)' }}>.env.local</code>
+          </p>
         </div>
       )}
     </div>
