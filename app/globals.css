@@ -53,6 +53,9 @@
   /* Bandhani dot field — cream on dark indigo, 28px grid */
   --bandhani-bg-dark: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><circle cx='14' cy='14' r='2' fill='%23F5EFE2' opacity='0.8'/><circle cx='14' cy='14' r='4.5' fill='none' stroke='%23F5EFE2' stroke-width='0.4' opacity='0.4'/><circle cx='0' cy='0' r='2' fill='%23F5EFE2' opacity='0.8'/><circle cx='28' cy='0' r='2' fill='%23F5EFE2' opacity='0.8'/><circle cx='0' cy='28' r='2' fill='%23F5EFE2' opacity='0.8'/><circle cx='28' cy='28' r='2' fill='%23F5EFE2' opacity='0.8'/></svg>");
 
+  /* Bandhani dot field — indigo on light cream, 28px grid */
+  --bandhani-bg-light: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><circle cx='14' cy='14' r='2' fill='%231A1A48' opacity='0.7'/><circle cx='14' cy='14' r='4.5' fill='none' stroke='%231A1A48' stroke-width='0.4' opacity='0.35'/><circle cx='0' cy='0' r='2' fill='%231A1A48' opacity='0.7'/><circle cx='28' cy='0' r='2' fill='%231A1A48' opacity='0.7'/><circle cx='0' cy='28' r='2' fill='%231A1A48' opacity='0.7'/><circle cx='28' cy='28' r='2' fill='%231A1A48' opacity='0.7'/></svg>");
+
   /* Patola diamond lattice — gold on dark, 40px grid */
   --patola-bg-dark: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><g fill='none' stroke='%23C49532' stroke-width='0.8' opacity='0.7'><path d='M0 20 L20 0 L40 20 L20 40 Z'/><path d='M10 20 L20 10 L30 20 L20 30 Z'/><circle cx='20' cy='20' r='1.6' fill='%23C49532' stroke='none' opacity='1'/></g></svg>");
 
@@ -64,8 +67,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body, #__next { height: 100%; overflow: hidden; }
 body {
-  background: var(--indigo-900);
-  color: var(--cream-100);
+  background: var(--cream-50);
+  color: var(--text-on-light);
   font-family: var(--font-body);
 }
 
@@ -76,16 +79,16 @@ body {
 }
 
 /* ── Mapbox overrides ───────────────────────────────────────────────────────── */
-.mapboxgl-ctrl-attrib-inner a { color: rgba(245,239,226,0.4) !important; }
-.mapboxgl-ctrl-logo { opacity: 0.3 !important; }
+.mapboxgl-ctrl-attrib-inner a { color: rgba(26,26,72,0.5) !important; }
+.mapboxgl-ctrl-logo { opacity: 0.45 !important; }
 .mapboxgl-ctrl-group {
-  background: rgba(17,16,58,0.92) !important;
-  border: 1px solid rgba(196,149,50,0.15) !important;
+  background: rgba(250,246,234,0.95) !important;
+  border: 1px solid rgba(26,26,72,0.15) !important;
   border-radius: 2px !important;
 }
 .mapboxgl-ctrl-group button { background: transparent !important; }
-.mapboxgl-ctrl-group button:not(:last-child) { border-bottom: 1px solid rgba(245,239,226,0.07) !important; }
-.mapboxgl-ctrl button .mapboxgl-ctrl-icon { filter: invert(1) opacity(0.45); }
+.mapboxgl-ctrl-group button:not(:last-child) { border-bottom: 1px solid rgba(26,26,72,0.08) !important; }
+.mapboxgl-ctrl button .mapboxgl-ctrl-icon { filter: opacity(0.55); }
 
 /* ── Map marker base ────────────────────────────────────────────────────────── */
 .gujarat-marker {
@@ -179,7 +182,7 @@ body {
   transform: translateX(-50%);
   width: 0;
   height: 1px;
-  background: var(--gold);
+  background: var(--accent);
   transition: width 0.35s ease;
 }
 .era-step.era-active::after { width: 26px; }
@@ -196,9 +199,9 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: var(--bandhani-bg-dark);
+  background-image: var(--bandhani-bg-light);
   background-size: 28px 28px;
-  opacity: 0.05;
+  opacity: 0.06;
   pointer-events: none;
   z-index: 0;
 }

@@ -32,9 +32,9 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
         role="tablist"
         aria-label="Historical eras"
         style={{
-          background: 'rgba(17,16,58,0.97)',
+          background: 'rgba(250,246,234,0.97)',
           backdropFilter: 'blur(16px)',
-          borderTop: '1px solid rgba(245,239,226,0.07)',
+          borderTop: '1px solid rgba(26,26,72,0.1)',
           padding: '0 52px 14px',
           position: 'relative',
         }}
@@ -45,7 +45,7 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: 'var(--patola-bg-dark)',
+            backgroundImage: 'var(--patola-bg-light)',
             backgroundSize: '40px 40px',
             opacity: 0.14,
             pointerEvents: 'none',
@@ -78,7 +78,7 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
                     fontVariationSettings: '"opsz" 72',
                     letterSpacing: 0,
                     marginBottom: 5,
-                    color: isActive ? 'var(--gold-soft)' : 'rgba(245,239,226,0.35)',
+                    color: isActive ? 'var(--accent)' : 'rgba(26,26,72,0.45)',
                     transition: 'color 0.25s ease',
                   }}
                 >
@@ -91,7 +91,7 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
                     fontSize: 10,
                     letterSpacing: '0.10em',
                     textTransform: 'uppercase',
-                    color: isActive ? 'var(--gold)' : 'rgba(245,239,226,0.28)',
+                    color: isActive ? 'var(--accent)' : 'rgba(26,26,72,0.35)',
                     transition: 'color 0.25s ease',
                   }}
                 >
@@ -112,7 +112,7 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
               left: 0,
               right: 0,
               height: 1,
-              background: 'rgba(245,239,226,0.14)',
+              background: 'rgba(26,26,72,0.15)',
             }}
           />
 
@@ -124,7 +124,7 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
               left: 0,
               height: 1,
               width: `${sliderPct}%`,
-              background: 'linear-gradient(90deg, #6B1F2E, #B04E18 40%, #C49532 100%)',
+              background: 'linear-gradient(90deg, #6B1F2E, #B04E18 40%, var(--accent) 100%)',
               transition: 'width 400ms cubic-bezier(0.32, 0.72, 0.24, 1.1)',
             }}
           />
@@ -141,7 +141,7 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
                   top: isActiveTick ? 3 : 4,
                   width: 1,
                   height: isActiveTick ? 9 : 7,
-                  background: isActiveTick ? 'var(--gold)' : 'rgba(245,239,226,0.25)',
+                  background: isActiveTick ? 'var(--accent)' : 'rgba(26,26,72,0.3)',
                   transform: 'translateX(-50%)',
                   transition: 'background 0.25s ease, height 0.25s ease, top 0.25s ease',
                 }}
@@ -159,9 +159,9 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
               width: 16,
               height: 16,
               borderRadius: '50%',
-              background: 'var(--gold)',
-              border: '2px solid var(--indigo-900)',
-              boxShadow: '0 0 0 3px rgba(196,149,50,0.22), 0 0 20px rgba(196,149,50,0.5)',
+              background: 'var(--accent)',
+              border: '2px solid var(--cream-100)',
+              boxShadow: '0 0 0 3px rgba(201,52,42,0.18)',
               transition: 'left 400ms cubic-bezier(0.32, 0.72, 0.24, 1.1)',
               pointerEvents: 'none',
             }}

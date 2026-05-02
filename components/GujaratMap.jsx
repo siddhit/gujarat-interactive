@@ -60,7 +60,7 @@ export default function GujaratMap({ markers, activeEra, activeMarkerId, onMarke
 
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
+      style: 'mapbox://styles/mapbox/light-v11',
       center: [71.5, 22.3],
       zoom: 6.3,
       minZoom: 5,

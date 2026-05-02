@@ -30,7 +30,7 @@ export default function MapApp() {
   return (
     <div
       className="relative h-screen w-screen overflow-hidden"
-      style={{ background: 'var(--indigo-900)' }}
+      style={{ background: 'var(--cream-50)' }}
     >
       {/* ── Map ── */}
       <GujaratMap
@@ -45,9 +45,9 @@ export default function MapApp() {
         className="absolute top-0 left-0 right-0 z-20 flex items-center px-7 gap-4"
         style={{
           height: 52,
-          background: 'rgba(17,16,58,0.96)',
+          background: 'rgba(250,246,234,0.96)',
           backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(245,239,226,0.07)',
+          borderBottom: '1px solid rgba(26,26,72,0.1)',
         }}
       >
         {/* ગુજરાત — Tiro Gujarati */}
@@ -56,7 +56,7 @@ export default function MapApp() {
             fontFamily: 'var(--font-guj)',
             fontSize: 22,
             lineHeight: 1,
-            color: 'var(--cream-100)',
+            color: 'var(--indigo-900)',
           }}
         >
           ગુજરાત
@@ -65,7 +65,7 @@ export default function MapApp() {
         {/* Divider */}
         <span
           className="flex-none"
-          style={{ width: 1, height: 22, background: 'rgba(245,239,226,0.15)' }}
+          style={{ width: 1, height: 22, background: 'rgba(26,26,72,0.15)' }}
         />
 
         {/* Gujarat — Across Time — Inter (UI label at this size) */}
@@ -74,7 +74,7 @@ export default function MapApp() {
             fontFamily: 'var(--font-ui)',
             fontSize: 12,
             letterSpacing: '0.08em',
-            color: 'rgba(245,239,226,0.45)',
+            color: 'rgba(26,26,72,0.45)',
           }}
         >
           Gujarat — Across Time
@@ -100,7 +100,7 @@ export default function MapApp() {
                   fontSize: 10,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
-                  color: 'rgba(245,239,226,0.4)',
+                  color: 'rgba(26,26,72,0.45)',
                 }}
               >
                 {label}
@@ -109,7 +109,7 @@ export default function MapApp() {
           ))}
         </div>
 
-        {/* Era badge — gold, Inter small-caps */}
+        {/* Era badge — accent crimson on cream, Inter small-caps */}
         <button
           onClick={() => setShowAbout(true)}
           style={{
@@ -117,15 +117,15 @@ export default function MapApp() {
             fontSize: 10,
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
-            color: 'var(--gold)',
+            color: 'var(--accent)',
             padding: '5px 14px',
-            border: '1px solid rgba(196,149,50,0.4)',
+            border: '1px solid rgba(201,52,42,0.3)',
             background: 'none',
             cursor: 'pointer',
             transition: 'border-color 0.2s, color 0.2s',
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(196,149,50,0.7)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(196,149,50,0.4)'; }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(201,52,42,0.6)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(201,52,42,0.3)'; }}
           title="About this map"
         >
           {era.shortLabel} · {era.period}
@@ -234,9 +234,9 @@ export default function MapApp() {
         className="md:hidden absolute left-4 z-20 flex flex-col gap-2 p-3"
         style={{
           bottom: 116,
-          background: 'rgba(17,16,58,0.9)',
+          background: 'rgba(250,246,234,0.95)',
           backdropFilter: 'blur(8px)',
-          border: '1px solid rgba(245,239,226,0.07)',
+          border: '1px solid rgba(26,26,72,0.1)',
         }}
       >
         {[
@@ -252,7 +252,7 @@ export default function MapApp() {
                 fontSize: 10,
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase',
-                color: 'rgba(245,239,226,0.5)',
+                color: 'rgba(26,26,72,0.55)',
               }}
             >
               {label}
