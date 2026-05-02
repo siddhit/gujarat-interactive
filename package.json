@@ -1,0 +1,24 @@
+{
+  "name": "gujarat-interactive",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "scrape": "node scripts/scrape-wikipedia.js"
+  },
+  "dependencies": {
+    "next": "14.2.3",
+    "react": "^18",
+    "react-dom": "^18",
+    "mapbox-gl": "^3.3.0",
+    "@sanity/client": "^6.15.7"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.0.1",
+    "cheerio": "^1.0.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1"
+  }
+}
