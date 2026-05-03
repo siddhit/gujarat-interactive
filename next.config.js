@@ -3,17 +3,8 @@ const nextConfig = {
   output: 'export',
   trailingSlash: true,
   images: { unoptimized: true },
-  // Turbopack: mock Node-only modules that mapbox-gl references but never runs in the browser
-  experimental: {
-    turbo: {
-      resolveAliases: {
-        fs: { browser: './lib/empty-module.js' },
-        net: { browser: './lib/empty-module.js' },
-        tls: { browser: './lib/empty-module.js' },
-      },
-    },
-  },
-  // Webpack fallback kept for `next build`
+  // mapbox-gl ships a UMD bundle — transpile it so Next.js can tree-shake correctly
+  transpilePackages: ['mapbox-gl'],
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
