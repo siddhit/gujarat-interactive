@@ -9,11 +9,12 @@
     "scrape": "node scripts/scrape-wikipedia.js"
   },
   "dependencies": {
+    "@sanity/client": "^6.15.7",
+    "leaflet": "^1.9.4",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "mapbox-gl": "^3.3.0",
-    "@sanity/client": "^6.15.7"
+    "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",

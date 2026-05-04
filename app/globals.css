@@ -78,17 +78,25 @@ body {
   font-variation-settings: "opsz" 144;
 }
 
-/* ── Mapbox overrides ───────────────────────────────────────────────────────── */
-.mapboxgl-ctrl-attrib-inner a { color: rgba(26,26,72,0.5) !important; }
-.mapboxgl-ctrl-logo { opacity: 0.45 !important; }
-.mapboxgl-ctrl-group {
-  background: rgba(250,246,234,0.95) !important;
+/* ── Leaflet overrides ──────────────────────────────────────────────────────── */
+.leaflet-control-zoom {
   border: 1px solid rgba(26,26,72,0.15) !important;
   border-radius: 2px !important;
 }
-.mapboxgl-ctrl-group button { background: transparent !important; }
-.mapboxgl-ctrl-group button:not(:last-child) { border-bottom: 1px solid rgba(26,26,72,0.08) !important; }
-.mapboxgl-ctrl button .mapboxgl-ctrl-icon { filter: opacity(0.55); }
+.leaflet-control-zoom a {
+  background: rgba(250,246,234,0.95) !important;
+  color: rgba(26,26,72,0.6) !important;
+  border-bottom: 1px solid rgba(26,26,72,0.08) !important;
+  font-family: var(--font-ui) !important;
+}
+.leaflet-control-zoom a:hover { background: var(--cream-100) !important; }
+.leaflet-control-attribution {
+  background: rgba(250,246,234,0.85) !important;
+  font-family: var(--font-ui) !important;
+  font-size: 9px !important;
+  color: rgba(26,26,72,0.4) !important;
+}
+.leaflet-control-attribution a { color: rgba(26,26,72,0.5) !important; }
 
 /* ── Map marker base ────────────────────────────────────────────────────────── */
 .gujarat-marker {
