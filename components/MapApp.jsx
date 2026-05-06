@@ -273,6 +273,41 @@ export default function MapApp() {
 
       {/* ── Report panel ── */}
       <ReportPanel />
+
+      {/* ── Attribution / made-with — sits in the bottom-right gap when panel is open ── */}
+      <div
+        className="fixed z-20 flex flex-col items-end gap-1"
+        style={{
+          bottom: 106,
+          right: 12,
+          transition: 'opacity 300ms ease',
+          opacity: panelOpen ? 1 : 0.55,
+          pointerEvents: 'none',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: 'var(--font-guj)',
+            fontSize: 12,
+            lineHeight: 1.4,
+            color: 'var(--indigo-800)',
+            opacity: 0.75,
+          }}
+        >
+          💙 ગાઠિયા&thinsp;🥨 ને જલેબી&thinsp;🍩 ના હેત સાથે
+        </p>
+        <p
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 9,
+            letterSpacing: '0.04em',
+            color: 'var(--muted-on-light)',
+            opacity: 0.7,
+          }}
+        >
+          © {new Date().getFullYear()} · Historical borders approximate
+        </p>
+      </div>
     </div>
   );
 }
