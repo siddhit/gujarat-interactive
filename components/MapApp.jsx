@@ -305,7 +305,7 @@ export default function MapApp() {
             opacity: 0.7,
           }}
         >
-          © {new Date().getFullYear()} · Historical borders approximate
+          © {new Date().getFullYear()} · Built with Claude · Historical borders approximate
         </p>
       </div>
     </div>
