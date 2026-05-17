@@ -22,7 +22,7 @@ export const SAMPLE_MARKERS = [
     status: 'published',
   },
   {
-    _id: 'e0-pl1',
+    _id: 'e0-pl2',
     title_guj: 'દ્વારકા',
     title_eng: 'Dwarka',
     type: 'place',
