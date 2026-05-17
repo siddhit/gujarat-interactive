@@ -23,6 +23,24 @@ export const SAMPLE_MARKERS = [
   },
   {
     _id: 'e0-pl1',
+    title_guj: 'દ્વારકા',
+    title_eng: 'Dwarka',
+    type: 'place',
+    eras: [0],
+    lat: 22.2442,
+    lng: 68.9685,
+    body_eng:
+      'A city seeped in history, religion and culture. From its many references in the Mahabharata as Lord Krishna\'s adoptive place to being a major port corroborated by Greek accounts, Dwarka has risen, fallen and risen again and continues to be a destination for tourists, pilgrims and archeologists alike.
+    excerpt_guj:
+      'દ્વારકા એ ગુજરાત, ભારતમાં એક પ્રખ્યાત દરિયાકાંઠાનું શહેર અને મુખ્ય હિન્દુ તીર્થસ્થળ છે, જે ઓખામંડળ દ્વીપકલ્પ પર આવેલું છે જ્યાં ગોમતી નદી અરબી સમુદ્રને મળે છે. ભગવાન કૃષ્ણની સુપ્રસિદ્ધ રાજધાની તરીકે આદરણીય, તે સપ્ત પુરી (સાત પવિત્ર પવિત્ર શહેરો) માંનું એક છે અને આદિ શંકરાચાર્ય દ્વારા સ્થાપિત ચાર મુખ્ય મઠો (મઠ સંસ્થાઓ) માંથી એક છે.',
+    links: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Dwarka' },
+      { label: 'JSTOR', url: 'https://www.jstor.org/stable/27438510' },
+    ],
+    status: 'published',
+  },
+  {
+    _id: 'e0-pl3',
     title_guj: 'મોઢેરા સૂર્ય મંદિર',
     title_eng: 'Modhera Sun Temple',
     type: 'place',
@@ -40,7 +58,7 @@ export const SAMPLE_MARKERS = [
     status: 'published',
   },
   {
-    _id: 'e0-pl2',
+    _id: 'e0-pl1',
     title_guj: 'લોથલ',
     title_eng: 'Lothal',
     type: 'place',
@@ -57,7 +75,7 @@ export const SAMPLE_MARKERS = [
     status: 'published',
   },
   {
-    _id: 'e0-pl3',
+    _id: 'e0-pl4',
     title_guj: 'રાણી કી વાવ',
     title_eng: 'Rani ki Vav',
     type: 'place',
