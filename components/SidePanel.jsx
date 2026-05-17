@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { ERAS } from '../data/eras';
+import { MARKER_SVGS } from '../lib/markerIcons';
 
 export default function SidePanel({ marker, onClose }) {
   const isOpen   = Boolean(marker);
@@ -72,9 +73,16 @@ function PanelContent({ marker, onClose }) {
           ✕
         </button>
 
+        {/* Marker icon */}
+        <div
+          className="pt-6 px-6"
+          dangerouslySetInnerHTML={{ __html: MARKER_SVGS[marker.type] ?? MARKER_SVGS.place }}
+          style={{ width: 32, height: 32 }}
+        />
+
         {/* Type label — accent crimson, Inter small-caps */}
         <p
-          className="pt-6 px-6"
+          className="pt-2 px-6"
           style={{
             fontFamily: 'var(--font-ui)',
             fontSize: 10,
