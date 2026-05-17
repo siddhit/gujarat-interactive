@@ -29,8 +29,8 @@ export default function SidePanel({ marker, onClose }) {
         tabIndex={-1}
         role="complementary"
         aria-label="Marker detail"
-        className={`side-panel fixed top-[52px] right-0 bottom-[98px] z-40
-          w-full sm:w-[360px] flex flex-col
+        className={`side-panel fixed top-[56px] right-0 bottom-0 z-40
+          w-full sm:w-[380px] flex flex-col
           outline-none overflow-hidden
           ${isOpen ? 'panel-open' : ''}`}
         style={{
@@ -159,7 +159,7 @@ function PanelContent({ marker, onClose }) {
                 lineHeight: 1.9,
                 color: 'var(--indigo-900)',
                 borderLeft: '3px solid var(--accent)',
-                background: 'rgba(26,26,72,0.03)',
+                background: 'rgba(201,52,42,0.05)',
               }}
             >
               {marker.excerpt_guj}

@@ -48,7 +48,7 @@
   --muted:   var(--muted-on-light);
   --gold:    #C49532;
   --surface: var(--indigo-900);
-  --panel-w: 360px;
+  --panel-w: 380px;
 
   /* Bandhani dot field — cream on dark indigo, 28px grid */
   --bandhani-bg-dark: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><circle cx='14' cy='14' r='2' fill='%23F5EFE2' opacity='0.8'/><circle cx='14' cy='14' r='4.5' fill='none' stroke='%23F5EFE2' stroke-width='0.4' opacity='0.4'/><circle cx='0' cy='0' r='2' fill='%23F5EFE2' opacity='0.8'/><circle cx='28' cy='0' r='2' fill='%23F5EFE2' opacity='0.8'/><circle cx='0' cy='28' r='2' fill='%23F5EFE2' opacity='0.8'/><circle cx='28' cy='28' r='2' fill='%23F5EFE2' opacity='0.8'/></svg>");
@@ -79,6 +79,7 @@ body {
 }
 
 /* ── Leaflet overrides ──────────────────────────────────────────────────────── */
+.leaflet-tile { filter: saturate(0.55) brightness(1.02) sepia(0.08); }
 .leaflet-control-zoom {
   border: 1px solid rgba(26,26,72,0.15) !important;
   border-radius: 2px !important;
@@ -185,15 +186,15 @@ body {
 .era-step::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
-  height: 1px;
+  height: 1.5px;
   background: var(--accent);
   transition: width 0.35s ease;
 }
-.era-step.era-active::after { width: 26px; }
+.era-step.era-active::after { width: 22px; }
 
 /* ── Side panel (cream + bandhani) ─────────────────────────────────────────── */
 .side-panel {

@@ -44,7 +44,7 @@ export default function MapApp() {
       <header
         className="absolute top-0 left-0 right-0 z-20 flex items-center px-7 gap-4"
         style={{
-          height: 52,
+          height: 56,
           background: 'rgba(250,246,234,0.96)',
           backdropFilter: 'blur(12px)',
           borderBottom: '1px solid rgba(26,26,72,0.1)',
@@ -68,12 +68,13 @@ export default function MapApp() {
           style={{ width: 1, height: 22, background: 'rgba(26,26,72,0.15)' }}
         />
 
-        {/* Gujarat — Across Time — Inter (UI label at this size) */}
+        {/* Gujarat — Across Time — Fraunces italic (editorial subtitle) */}
         <span
           style={{
-            fontFamily: 'var(--font-ui)',
-            fontSize: 12,
-            letterSpacing: '0.08em',
+            fontFamily: 'var(--font-display)',
+            fontStyle: 'italic',
+            fontVariationSettings: '"opsz" 144',
+            fontSize: 14,
             color: 'rgba(26,26,72,0.45)',
           }}
         >
@@ -128,7 +129,7 @@ export default function MapApp() {
           onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(201,52,42,0.3)'; }}
           title="About this map"
         >
-          {era.shortLabel} · {era.period}
+          {era.label} · {era.period}
         </button>
       </header>
 
@@ -206,7 +207,7 @@ export default function MapApp() {
                 letterSpacing: '0.04em',
               }}
             >
-              Mapbox GL JS · Next.js · Sanity CMS
+              Leaflet · Next.js · Sanity CMS
             </p>
             <button
               onClick={() => setShowAbout(false)}
@@ -233,7 +234,7 @@ export default function MapApp() {
       <div
         className="md:hidden absolute left-4 z-20 flex flex-col gap-2 p-3"
         style={{
-          bottom: 116,
+          bottom: 100,
           background: 'rgba(250,246,234,0.95)',
           backdropFilter: 'blur(8px)',
           border: '1px solid rgba(26,26,72,0.1)',
@@ -278,7 +279,7 @@ export default function MapApp() {
       <div
         className="fixed z-20 flex flex-col items-end gap-1"
         style={{
-          bottom: 106,
+          bottom: 90,
           right: 12,
           transition: 'opacity 300ms ease',
           opacity: panelOpen ? 1 : 0.55,
