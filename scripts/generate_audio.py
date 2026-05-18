@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 """
-generate_audio.py — Generate audio recitations for Akha Bhagat verses
-using Sarvam AI TTS, and write timing data for karaoke synchronization.
+generate_audio.py — Generate audio for Akha Bhagat verses via Sarvam TTS
+and write timing data for karaoke sync.
 
 Usage:
+    export SARVAM_API_KEY=your_key_here
     python scripts/generate_audio.py
-
-Requires:
-    pip install requests
-
-Set SARVAM_API_KEY environment variable before running.
 
 Output:
     public/verses/akha-bhagat/audio/poem-1.mp3
@@ -17,14 +13,28 @@ Output:
     public/verses/akha-bhagat/audio/timings.json
 """
 
-import os
+import base64
 import json
+import os
 import time
-import sys
 from pathlib import Path
 
-# ── Poem data ──────────────────────────────────────────────────────────────────
-POEMS = {
+try:
+    import requests
+except ImportError:
+    raise SystemExit("requests not installed — run: pip install requests")
+
+# ── Config ────────────────────────────────────────────────────────────────────
+API_KEY   = os.environ.get("SARVAM_API_KEY", "")
+API_URL   = "https://api.sarvam.ai/text-to-speech/stream"
+OUT_DIR   = Path(__file__).parent.parent / "public" / "verses" / "akha-bhagat" / "audio"
+
+# Gujarati TTS speaking rate — chars per second at pace 0.94
+CHARS_PER_SECOND = 9.5
+PAUSE_BETWEEN_LINES = 0.32   # seconds of silence between lines
+
+# ── Poem data ─────────────────────────────────────────────────────────────────
+POEMS: dict[int, list[str]] = {
     1: [
         "તિલક કરતાં ત્રેપન થયાં,",
         "ને જપમાળાનાં નાકાં ગયાં,",
@@ -73,189 +83,112 @@ POEMS = {
     ],
 }
 
-OUTPUT_DIR = Path(__file__).parent.parent / "public" / "verses" / "akha-bhagat" / "audio"
-SARVAM_API_KEY = os.environ.get("SARVAM_API_KEY", "")
-SARVAM_TTS_URL = "https://api.sarvam.ai/text-to-speech"
+
+def estimate_timings(lines: list[str], total_seconds: float) -> list[dict]:
+    """Apportion total_seconds across lines by character count."""
+    char_counts = [max(1, len(ln.strip())) for ln in lines]
+    total_chars  = sum(char_counts)
+    timings, cursor = [], 0.0
+    for i, n in enumerate(char_counts):
+        dur = (n / total_chars) * total_seconds
+        timings.append({"line": i, "start": round(cursor, 3), "end": round(cursor + dur, 3)})
+        cursor += dur
+    if timings:
+        timings[-1]["end"] = round(total_seconds, 3)
+    return timings
 
 
-def estimate_duration(text: str, chars_per_second: float = 8.0) -> float:
-    """Rough estimate: Gujarati TTS at ~8 chars/second."""
-    return max(1.2, len(text) / chars_per_second)
-
-
-def generate_with_sarvam(text: str, output_path: Path) -> bool:
-    """Call Sarvam AI TTS API to generate audio. Returns True on success."""
+def mp3_duration(path: Path) -> float:
+    """Best-effort MP3 duration. Falls back to char-based estimate."""
+    # Try mutagen (optional)
     try:
-        import requests
-    except ImportError:
-        print("  → requests not installed. Run: pip install requests")
-        return False
+        from mutagen.mp3 import MP3  # type: ignore
+        return MP3(str(path)).info.length
+    except Exception:
+        pass
+    # Rough estimate from file size: 128 kbps → 16 000 bytes/sec
+    size = path.stat().st_size
+    return size / 16_000
 
-    if not SARVAM_API_KEY:
-        print("  → SARVAM_API_KEY not set. Skipping API call.")
-        return False
 
+def call_sarvam(text: str, out_path: Path) -> bool:
+    """Stream one TTS call to out_path. Returns True on success."""
     headers = {
-        "api-subscription-key": SARVAM_API_KEY,
+        "api-subscription-key": API_KEY,
         "Content-Type": "application/json",
     }
     payload = {
-        "inputs": [text],
+        "text": text,
         "target_language_code": "gu-IN",
-        "speaker": "diya",
-        "model": "bulbul:v2",
-        "pitch": 0,
-        "pace": 0.9,
-        "loudness": 1.5,
+        "speaker": "roopa",
+        "model": "bulbul:v3",
+        "pace": 0.94,
+        "speech_sample_rate": 22050,
+        "output_audio_codec": "mp3",
         "enable_preprocessing": True,
     }
-
     try:
-        resp = requests.post(SARVAM_TTS_URL, headers=headers, json=payload, timeout=30)
-        if not resp.ok:
-            print(f"  → Sarvam API error: {resp.status_code} {resp.reason}")
-            print(f"  → Response body: {resp.text[:400]}")
-            return False
-        data = resp.json()
-        audio_b64 = data.get("audios", [None])[0]
-        if not audio_b64:
-            print(f"  → No audio in response for chunk")
-            return False
-        import base64
-        audio_bytes = base64.b64decode(audio_b64)
-        with open(output_path, "wb") as f:
-            f.write(audio_bytes)
+        with requests.post(API_URL, headers=headers, json=payload, stream=True, timeout=60) as r:
+            if not r.ok:
+                print(f"  ✗ {r.status_code} {r.reason}: {r.text[:300]}")
+                return False
+            with open(out_path, "wb") as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
         return True
     except Exception as e:
-        print(f"  → Request failed: {e}")
+        print(f"  ✗ Request error: {e}")
         return False
 
 
-def generate_poem_audio(poem_id: int, lines: list[str]) -> dict:
-    """
-    Generate a single MP3 for a poem (all lines concatenated with a pause)
-    and return timing data: [{start, end, line_idx}, ...].
+def process_poem(poem_id: int, lines: list[str]) -> dict:
+    print(f"\n── Poem {poem_id} ({len(lines)} lines) ──")
+    out_mp3 = OUT_DIR / f"poem-{poem_id}.mp3"
 
-    Strategy:
-      1. Try Sarvam API for each line separately, collect WAV chunks.
-      2. Concatenate with 0.3s silence between lines.
-      3. If API unavailable, produce a timings.json with estimated durations
-         (no real MP3 generated).
-    """
-    print(f"\n─── Poem {poem_id} ({len(lines)} lines) ───")
+    if not API_KEY:
+        print("  ⚠ SARVAM_API_KEY not set — writing estimated timings only.")
+        est_total = sum(max(1, len(l)) / CHARS_PER_SECOND + PAUSE_BETWEEN_LINES for l in lines)
+        return {str(poem_id): estimate_timings(lines, est_total)}
 
-    timings = []
-    current_time = 0.0
-    pause_between = 0.35  # seconds
+    # Send whole poem as one call (newlines become natural pauses)
+    full_text = "\n".join(lines)
+    print(f"  → Calling Sarvam TTS ({len(full_text)} chars)…")
+    ok = call_sarvam(full_text, out_mp3)
 
-    # Try line-by-line generation
-    all_chunks = []
-    api_success = bool(SARVAM_API_KEY)
-
-    if api_success:
-        try:
-            import requests  # noqa: F401
-        except ImportError:
-            api_success = False
-
-    for idx, line in enumerate(lines):
-        line_path = OUTPUT_DIR / f"_chunk_{poem_id}_{idx}.wav"
-        duration = estimate_duration(line)
-
-        if api_success:
-            print(f"  [{idx+1}/{len(lines)}] {line[:40]}...")
-            ok = generate_with_sarvam(line, line_path)
-            if ok:
-                # Measure actual duration if possible
-                try:
-                    import wave
-                    with wave.open(str(line_path), "rb") as wf:
-                        duration = wf.getnframes() / wf.getframerate()
-                except Exception:
-                    pass  # use estimate
-                all_chunks.append(line_path)
-            else:
-                api_success = False
-
-        timings.append({
-            "line_idx": idx,
-            "start": round(current_time, 3),
-            "end": round(current_time + duration, 3),
-        })
-        current_time += duration + pause_between
-        time.sleep(0.1)  # rate-limit courtesy
-
-    # If we have chunks, concatenate into final MP3
-    out_mp3 = OUTPUT_DIR / f"poem-{poem_id}.mp3"
-    if all_chunks:
-        _concatenate_wav_to_mp3(all_chunks, out_mp3)
-        # Clean up chunk files
-        for p in all_chunks:
-            try:
-                p.unlink()
-            except Exception:
-                pass
-        print(f"  → Written: {out_mp3}")
+    if ok:
+        duration = mp3_duration(out_mp3)
+        print(f"  ✓ {out_mp3.name}  ({duration:.1f}s)")
+        timings = estimate_timings(lines, duration)
     else:
-        print(f"  → No audio generated (API unavailable). Timings written for simulated playback.")
+        print("  ⚠ Falling back to estimated timings (no audio file written).")
+        est_total = sum(max(1, len(l)) / CHARS_PER_SECOND + PAUSE_BETWEEN_LINES for l in lines)
+        timings = estimate_timings(lines, est_total)
 
     return {str(poem_id): timings}
 
 
-def _concatenate_wav_to_mp3(wav_paths: list, out_path: Path):
-    """Concatenate WAV files and write as MP3 using pydub if available."""
-    try:
-        from pydub import AudioSegment  # type: ignore
-        from pydub.generators import Sine  # type: ignore
-
-        silence = AudioSegment.silent(duration=350)  # 350ms
-        combined = AudioSegment.empty()
-        for p in wav_paths:
-            seg = AudioSegment.from_wav(str(p))
-            combined = combined + seg + silence
-        combined.export(str(out_path), format="mp3", bitrate="128k")
-    except ImportError:
-        # pydub not available — write raw WAV bytes concatenated (not a valid MP3
-        # but at least the file exists for HEAD check to succeed)
-        print("  → pydub not available; writing concatenated WAV as fallback")
-        import wave, struct
-        all_frames = b""
-        params = None
-        for p in wav_paths:
-            with wave.open(str(p), "rb") as wf:
-                if params is None:
-                    params = wf.getparams()
-                all_frames += wf.readframes(wf.getnframes())
-        out_wav = out_path.with_suffix(".wav")
-        with wave.open(str(out_wav), "wb") as wf:
-            wf.setparams(params)
-            wf.writeframes(all_frames)
-        # rename as mp3 so client finds it
-        out_wav.rename(out_path)
-
-
 def main():
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    print(f"Output directory: {OUTPUT_DIR}")
+    if not API_KEY:
+        print("SARVAM_API_KEY not set — only timing estimates will be written.\n"
+              "Set it with:  export SARVAM_API_KEY=your_key_here")
 
-    if not SARVAM_API_KEY:
-        print(
-            "\nNote: SARVAM_API_KEY is not set.\n"
-            "Only timing data will be generated (simulated playback mode).\n"
-            "Set SARVAM_API_KEY=<your_key> to generate real audio.\n"
-        )
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    print(f"Output: {OUT_DIR}")
 
-    all_timings = {}
-
+    all_timings: dict = {}
     for poem_id, lines in POEMS.items():
-        result = generate_poem_audio(poem_id, lines)
+        result = process_poem(poem_id, lines)
         all_timings.update(result)
+        time.sleep(0.5)   # brief pause between poems
 
-    timings_path = OUTPUT_DIR / "timings.json"
-    with open(timings_path, "w", encoding="utf-8") as f:
-        json.dump(all_timings, f, ensure_ascii=False, indent=2)
-    print(f"\n→ Timings written: {timings_path}")
-    print("Done.")
+    timings_path = OUT_DIR / "timings.json"
+    timings_path.write_text(json.dumps(all_timings, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"\n✓ timings.json written")
+    print("\nNext steps:")
+    print("  git add public/verses/akha-bhagat/audio/")
+    print("  git commit -m 'Add Sarvam TTS audio for Akha Bhagat'")
+    print("  git push")
 
 
 if __name__ == "__main__":
