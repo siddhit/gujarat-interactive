@@ -18,7 +18,7 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
       className="absolute bottom-0 z-20"
       style={{
         left: 0,
-        right: panelOpen ? 'var(--panel-w)' : 0,
+        right: panelOpen ? 'min(var(--panel-w), calc(100vw - 160px))' : 0,
         transition: 'right 350ms cubic-bezier(0.4,0,0.2,1)',
       }}
     >

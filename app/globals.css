@@ -39,6 +39,7 @@
   --font-display: 'Fraunces', 'Cormorant Garamond', serif;
   --font-body:    'Cormorant Garamond', serif;
   --font-ui:      'Inter', system-ui, sans-serif;
+  --font-eng:     'Inter', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, monospace;
 
   /* Backward-compat aliases (used in components via var()) */
