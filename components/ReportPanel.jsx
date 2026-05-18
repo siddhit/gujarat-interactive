@@ -47,7 +47,7 @@ export default function ReportPanel() {
       {/* Floating trigger */}
       <button
         onClick={() => { setIsOpen(true); setStatus('idle'); }}
-        className="fixed bottom-[112px] left-4 z-30 flex items-center gap-2 px-3 py-2
+        className="fixed bottom-[96px] right-4 sm:bottom-[112px] sm:left-4 sm:right-auto z-30 flex items-center gap-2 px-3 py-2
           text-[11px] tracking-widest uppercase border transition-all duration-200"
         style={{
           fontFamily: 'var(--font-eng)',

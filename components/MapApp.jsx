@@ -62,14 +62,15 @@ export default function MapApp() {
           ગુજરાત
         </span>
 
-        {/* Divider */}
+        {/* Divider — hidden on mobile */}
         <span
-          className="flex-none"
+          className="hidden sm:flex-none"
           style={{ width: 1, height: 22, background: 'rgba(26,26,72,0.15)' }}
         />
 
-        {/* Gujarat — Across Time — Fraunces italic (editorial subtitle) */}
+        {/* Gujarat — Across Time — hidden on mobile */}
         <span
+          className="hidden sm:inline"
           style={{
             fontFamily: 'var(--font-display)',
             fontStyle: 'italic',
@@ -119,17 +120,18 @@ export default function MapApp() {
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
             color: 'var(--accent)',
-            padding: '5px 14px',
+            padding: '5px 10px',
             border: '1px solid rgba(201,52,42,0.3)',
             background: 'none',
             cursor: 'pointer',
+            whiteSpace: 'nowrap',
             transition: 'border-color 0.2s, color 0.2s',
           }}
           onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(201,52,42,0.6)'; }}
           onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(201,52,42,0.3)'; }}
           title="About this map"
         >
-          {era.label} · {era.period}
+          {era.shortLabel} · {era.period}
         </button>
       </header>
 
@@ -275,9 +277,9 @@ export default function MapApp() {
       {/* ── Report panel ── */}
       <ReportPanel />
 
-      {/* ── Attribution / made-with — sits in the bottom-right gap when panel is open ── */}
+      {/* ── Attribution / made-with — desktop only, bottom-right ── */}
       <div
-        className="fixed z-20 flex flex-col items-end gap-1"
+        className="hidden sm:flex fixed flex-col items-end gap-1"
         style={{
           bottom: 90,
           right: 12,

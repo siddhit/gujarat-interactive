@@ -25,12 +25,11 @@ export default function EraNavigator({ activeEra, onChange, panelOpen }) {
       <nav
         role="tablist"
         aria-label="Historical eras"
+        className="era-nav"
         style={{
           background: 'rgba(250,246,234,0.97)',
           backdropFilter: 'blur(16px)',
           borderTop: '1px solid rgba(26,26,72,0.1)',
-          padding: '16px 56px 0',
-          height: 84,
         }}
       >
         <div className="flex justify-between items-start h-full">
