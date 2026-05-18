@@ -102,8 +102,8 @@ def generate_with_sarvam(text: str, output_path: Path) -> bool:
     payload = {
         "inputs": [text],
         "target_language_code": "gu-IN",
-        "speaker": "meera",
-        "model": "bulbul:v1",
+        "speaker": "diya",
+        "model": "bulbul:v2",
         "pitch": 0,
         "pace": 0.9,
         "loudness": 1.5,
@@ -112,7 +112,10 @@ def generate_with_sarvam(text: str, output_path: Path) -> bool:
 
     try:
         resp = requests.post(SARVAM_TTS_URL, headers=headers, json=payload, timeout=30)
-        resp.raise_for_status()
+        if not resp.ok:
+            print(f"  → Sarvam API error: {resp.status_code} {resp.reason}")
+            print(f"  → Response body: {resp.text[:400]}")
+            return False
         data = resp.json()
         audio_b64 = data.get("audios", [None])[0]
         if not audio_b64:
@@ -124,7 +127,7 @@ def generate_with_sarvam(text: str, output_path: Path) -> bool:
             f.write(audio_bytes)
         return True
     except Exception as e:
-        print(f"  → Sarvam API error: {e}")
+        print(f"  → Request failed: {e}")
         return False
 
 
