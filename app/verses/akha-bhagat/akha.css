@@ -50,6 +50,12 @@
 @media (max-width: 680px) {
   #topbar { padding: 0 16px; gap: 10px; }
   .crumb { display: none; }
+  /* Mini-nav: hide label + back, collapse chips to Gujarati only */
+  .minnav-inner { padding: 0 16px; }
+  .minnav-label { display: none; }
+  .minnav-back { display: none; }
+  .chip > span:not(.chip-guj) { display: none; }
+  .chip { gap: 0; padding: 5px 11px; }
 }
 
 /* Hero */
@@ -398,14 +404,12 @@
   transition: width 0.4s linear;
 }
 
-/* Two-column poem body */
+/* Poem body — 2-column grid; each gu-line + en-line pair auto-fills col 1 / col 2 */
 .poem-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
-}
-@media (max-width: 680px) {
-  .poem-body { grid-template-columns: 1fr; }
+  column-gap: 40px;
+  align-items: start;
 }
 .col-label {
   font-family: 'Inter', sans-serif;
@@ -418,7 +422,19 @@
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(26,26,72,0.08);
 }
-.stanza { margin-bottom: 24px; }
+/* Stanza separator spans both columns on desktop */
+.stanza-div {
+  grid-column: 1 / -1;
+  height: 24px;
+}
+/* Portrait mobile: interleaved gu + en per line */
+@media (max-width: 680px) and (orientation: portrait) {
+  .poem-body { display: block; }
+  .col-label-en { display: none; }
+  .gu-line { margin-bottom: 0; padding-bottom: 2px; }
+  .en-line { padding-left: 16px; margin-bottom: 10px; font-size: 0.9rem; }
+  .stanza-div { height: 8px; }
+}
 
 /* Lines */
 .gu-line, .en-line {
@@ -450,25 +466,6 @@
   color: rgba(26,26,72,0.45);
 }
 
-/* Mobile English toggle */
-.col-en-toggle { display: none; }
-@media (max-width: 680px) {
-  .col-en-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    color: #6E6E92;
-    background: none;
-    border: 1px solid rgba(26,26,72,0.15);
-    padding: 6px 12px;
-    cursor: pointer;
-    margin-bottom: 16px;
-  }
-  .col-en { display: none; }
-  .col-en.expanded { display: block; }
-}
 
 /* Aside */
 .aside-chhapa {

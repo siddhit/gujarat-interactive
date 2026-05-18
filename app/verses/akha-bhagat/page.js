@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
 import './akha.css';
 
 // ── Poem data ─────────────────────────────────────────────────────────────────
@@ -348,74 +348,41 @@ export default function AkhaBhagat() {
         </div>
 
         <div className="poem-body">
-          {/* Gujarati column */}
-          <div className="col col-guj">
-            <div className="col-label">
-              ગુજરાતી{' '}
-              <span
-                style={{
-                  color: 'rgba(110,110,146,0.6)',
-                  fontFamily: 'Inter,sans-serif',
-                  fontSize: '9px',
-                }}
-              >
-                Gujarati
-              </span>
-            </div>
-            {poem.stanzas.map((stanza, si) => (
-              <div className="stanza" key={si}>
-                {stanza.map((line) => (
+          {/* Column labels — each occupies one grid column on desktop */}
+          <div className="col-label">
+            ગુજરાતી{' '}
+            <span style={{ color: 'rgba(110,110,146,0.6)', fontFamily: 'Inter,sans-serif', fontSize: '9px' }}>
+              Gujarati
+            </span>
+          </div>
+          <div className="col-label col-label-en">
+            English{' '}
+            <span style={{ color: 'rgba(110,110,146,0.6)', fontFamily: 'Inter,sans-serif', fontSize: '9px' }}>
+              Contextual rendering
+            </span>
+          </div>
+
+          {/* Lines — gu then en per line, so grid auto-places them into col 1 / col 2 */}
+          {poem.stanzas.map((stanza, si) => (
+            <Fragment key={si}>
+              {si > 0 && <div className="stanza-div" />}
+              {stanza.map((line) => (
+                <Fragment key={line.flatIdx}>
                   <span
-                    key={line.flatIdx}
-                    className={`gu-line${
-                      active === line.flatIdx
-                        ? ' active'
-                        : line.flatIdx < played
-                        ? ' played'
-                        : ''
-                    }`}
+                    className={`gu-line${active === line.flatIdx ? ' active' : line.flatIdx < played ? ' played' : ''}`}
                     title={line.roman}
                   >
                     {line.gu}
                   </span>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          {/* English column */}
-          <div className="col col-en">
-            <div className="col-label">
-              English{' '}
-              <span
-                style={{
-                  color: 'rgba(110,110,146,0.6)',
-                  fontFamily: 'Inter,sans-serif',
-                  fontSize: '9px',
-                }}
-              >
-                Contextual rendering
-              </span>
-            </div>
-            {poem.stanzas.map((stanza, si) => (
-              <div className="stanza" key={si}>
-                {stanza.map((line) => (
                   <span
-                    key={line.flatIdx}
-                    className={`en-line${
-                      active === line.flatIdx
-                        ? ' active'
-                        : line.flatIdx < played
-                        ? ' played'
-                        : ''
-                    }`}
+                    className={`en-line${active === line.flatIdx ? ' active' : line.flatIdx < played ? ' played' : ''}`}
                   >
                     {line.en}
                   </span>
-                ))}
-              </div>
-            ))}
-          </div>
+                </Fragment>
+              ))}
+            </Fragment>
+          ))}
         </div>
       </article>
     );
