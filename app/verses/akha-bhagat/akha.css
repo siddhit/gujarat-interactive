@@ -1,0 +1,524 @@
+/* ── Akha Bhagat Poetry Reader ─────────────────────────────── */
+
+/* Topbar */
+#topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 56px;
+  background: rgba(250,246,234,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(26,26,72,0.1);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  gap: 16px;
+}
+.site-guj {
+  font-family: 'Tiro Gujarati', serif;
+  font-size: 24px;
+  color: #11103A;
+  line-height: 1;
+  text-decoration: none;
+}
+.crumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #6E6E92;
+}
+.crumb a { color: #6E6E92; text-decoration: none; }
+.crumb a:hover { color: #11103A; }
+.crumb-sep { color: rgba(26,26,72,0.3); }
+.crumb-current { color: #11103A; }
+.topbar-spacer { flex: 1; }
+.topbar-era {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #C8681E;
+  text-decoration: none;
+  padding: 5px 10px;
+  border: 1px solid rgba(200,104,30,0.3);
+  white-space: nowrap;
+  transition: border-color 0.2s;
+}
+.topbar-era:hover { border-color: rgba(200,104,30,0.6); }
+@media (max-width: 680px) {
+  #topbar { padding: 0 16px; gap: 10px; }
+  .crumb { display: none; }
+}
+
+/* Hero */
+.hero {
+  padding: 72px 28px 56px;
+  border-bottom: 1px solid rgba(26,26,72,0.1);
+}
+.hero-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.hero-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #C9342A;
+  font-weight: 500;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.hero-kicker::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: #C9342A;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 64px;
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 24px; }
+  .hero { padding: 48px 20px 40px; }
+}
+.hero-title-guj {
+  font-family: 'Tiro Gujarati', serif;
+  font-size: clamp(5rem, 14vw, 9rem);
+  color: #11103A;
+  line-height: 0.95;
+}
+.hero-title-eng {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  color: #6E6E92;
+  margin-top: 14px;
+  font-weight: 300;
+}
+.hero-dates {
+  display: flex;
+  gap: 24px;
+  margin-top: 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #6E6E92;
+}
+.hero-bio {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #1A1A48;
+  max-width: 48ch;
+  padding: 4px 0 4px 22px;
+  border-left: 2px solid #C8681E;
+}
+.hero-bio em { font-style: italic; color: #11103A; }
+.hero-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid rgba(26,26,72,0.1);
+  margin-top: 40px;
+}
+@media (max-width: 760px) {
+  .hero-meta { grid-template-columns: repeat(2, 1fr); }
+}
+.hm-cell {
+  padding: 16px 20px;
+  border-right: 1px solid rgba(26,26,72,0.1);
+}
+.hm-cell:last-child { border-right: none; }
+.hm-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6E6E92;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.hm-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: #11103A;
+  line-height: 1.4;
+}
+.hm-value .small {
+  display: block;
+  font-size: 12px;
+  color: #6E6E92;
+  font-style: italic;
+}
+
+/* Mini nav */
+#minnav {
+  position: sticky;
+  top: 56px;
+  z-index: 900;
+  background: rgba(245,239,226,0.97);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(26,26,72,0.1);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+}
+#minnav.visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.minnav-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 28px;
+  height: 44px;
+}
+.minnav-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6E6E92;
+  font-weight: 600;
+  padding-right: 12px;
+  border-right: 1px solid rgba(26,26,72,0.12);
+  margin-right: 4px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border: 1px solid rgba(26,26,72,0.15);
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #1A1A48;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.chip:hover, .chip.active {
+  background: #11103A;
+  color: #F5EFE2;
+  border-color: #11103A;
+}
+.chip-guj {
+  font-family: 'Tiro Gujarati', serif;
+  font-size: 13px;
+}
+.minnav-spacer { flex: 1; }
+.minnav-back {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: #6E6E92;
+  text-decoration: none;
+}
+.minnav-back:hover { color: #11103A; }
+
+/* Banner */
+.banner {
+  max-width: 1240px;
+  margin: 20px auto 0;
+  padding: 12px 28px;
+  background: rgba(196,149,50,0.08);
+  border: 1px solid rgba(196,149,50,0.2);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #6E6E92;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.banner.hidden { display: none; }
+.banner code {
+  font-family: monospace;
+  font-size: 11px;
+  background: rgba(26,26,72,0.06);
+  padding: 1px 4px;
+}
+
+/* Section label */
+.section-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #C9342A;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 1240px;
+  margin: 56px auto 0;
+  padding: 0 28px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(26,26,72,0.1);
+}
+
+/* Poem card */
+.poem-card {
+  max-width: 1240px;
+  margin: 32px auto;
+  padding: 0 28px 64px;
+  border-bottom: 1px solid rgba(26,26,72,0.08);
+}
+.poem-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 28px 0 20px;
+  flex-wrap: wrap;
+}
+.poem-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "opsz" 144;
+  font-size: 13px;
+  color: #6E6E92;
+  margin-bottom: 8px;
+}
+.poem-title-guj {
+  font-family: 'Tiro Gujarati', serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: #11103A;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.poem-title-eng {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "opsz" 144;
+  font-size: 14px;
+  color: #6E6E92;
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+.poem-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C8681E;
+  font-weight: 600;
+  padding: 3px 10px;
+  border: 1px solid rgba(200,104,30,0.25);
+  display: inline-block;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.play-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(200,104,30,0.4);
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #C8681E;
+  transition: all 0.2s;
+}
+.play-btn:hover {
+  background: #C8681E;
+  color: white;
+  border-color: #C8681E;
+}
+.play-btn.playing {
+  background: #C8681E;
+  color: white;
+  border-color: #C8681E;
+}
+.play-btn svg { width: 20px; height: 20px; fill: currentColor; }
+.icon-play { display: block; }
+.icon-pause { display: none; }
+.play-btn.playing .icon-play { display: none; }
+.play-btn.playing .icon-pause { display: block; }
+.play-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #C8681E;
+}
+.play-meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: #6E6E92;
+  letter-spacing: 0.04em;
+}
+.icon-row { display: flex; gap: 6px; }
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(26,26,72,0.15);
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6E6E92;
+  transition: all 0.2s;
+}
+.icon-btn:hover { border-color: #11103A; color: #11103A; }
+.icon-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* Progress bar */
+.poem-progress {
+  height: 2px;
+  background: rgba(26,26,72,0.08);
+  margin-bottom: 28px;
+}
+.poem-progress-fill {
+  height: 100%;
+  background: #C8681E;
+  transition: width 0.4s linear;
+}
+
+/* Two-column poem body */
+.poem-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+@media (max-width: 680px) {
+  .poem-body { grid-template-columns: 1fr; }
+}
+.col-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6E6E92;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(26,26,72,0.08);
+}
+.stanza { margin-bottom: 24px; }
+
+/* Lines */
+.gu-line, .en-line {
+  display: block;
+  padding: 6px 10px;
+  border-left: 2px solid transparent;
+  margin-bottom: 2px;
+  transition: background 0.25s, color 0.25s, border-color 0.25s;
+  cursor: default;
+  line-height: 1.6;
+}
+.gu-line {
+  font-family: 'Tiro Gujarati', serif;
+  font-size: 1.25rem;
+  color: #11103A;
+}
+.en-line {
+  font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: #1A1A48;
+}
+.gu-line.active, .en-line.active {
+  background: rgba(200,104,30,0.12);
+  border-left-color: #C8681E;
+  color: #11103A;
+}
+.gu-line.played, .en-line.played {
+  color: rgba(26,26,72,0.45);
+}
+
+/* Mobile English toggle */
+.col-en-toggle { display: none; }
+@media (max-width: 680px) {
+  .col-en-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #6E6E92;
+    background: none;
+    border: 1px solid rgba(26,26,72,0.15);
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+  .col-en { display: none; }
+  .col-en.expanded { display: block; }
+}
+
+/* Aside */
+.aside-chhapa {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px 28px 0;
+}
+.aside-chhapa blockquote {
+  border-left: 2px solid #C49532;
+  padding: 12px 0 12px 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: #6E6E92;
+}
+
+/* Footer nav */
+.next-poet {
+  max-width: 1240px;
+  margin: 64px auto 0;
+  padding: 32px 28px;
+  border-top: 1px solid rgba(26,26,72,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.next-poet a {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #C9342A;
+  text-decoration: none;
+}
+
+/* Footer */
+footer.akha-footer {
+  border-top: 1px solid rgba(26,26,72,0.1);
+  padding: 24px 28px;
+  margin-top: 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #6E6E92;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+}
+footer.akha-footer a { color: #C9342A; text-decoration: none; }

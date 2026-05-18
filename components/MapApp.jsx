@@ -50,17 +50,19 @@ export default function MapApp() {
           borderBottom: '1px solid rgba(26,26,72,0.1)',
         }}
       >
-        {/* ગુજરાત — Tiro Gujarati */}
-        <span
+        {/* ગુજરાત — Tiro Gujarati, links back to home */}
+        <a
+          href="/"
           style={{
             fontFamily: 'var(--font-guj)',
             fontSize: 22,
             lineHeight: 1,
             color: 'var(--indigo-900)',
+            textDecoration: 'none',
           }}
         >
           ગુજરાત
-        </span>
+        </a>
 
         {/* Divider — hidden on mobile */}
         <span

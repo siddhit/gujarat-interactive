@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ── Google Fonts — Fraunces replaces Playfair Display ─────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Tiro+Gujarati:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tiro+Gujarati:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ── Design tokens ───────────────────────────────────────────────────────────── */
 :root {
@@ -65,7 +65,8 @@
 
 /* ── Base reset ─────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #__next { height: 100%; overflow: hidden; }
+html { height: 100%; }
+body, #__next { min-height: 100%; }
 body {
   background: var(--cream-50);
   color: var(--text-on-light);

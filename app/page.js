@@ -1,7 +1,5 @@
-import dynamic from 'next/dynamic';
-
-const MapApp = dynamic(() => import('../components/MapApp'), { ssr: false });
+import LandingPage from '../components/LandingPage';
 
 export default function Home() {
-  return <MapApp />;
+  return <LandingPage />;
 }

@@ -1,12 +1,12 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Gujarat — Across Time',
+  title: 'ગુજરાત — A literary atlas',
   description:
-    'An interactive historical map exploring Gujarat through five eras — from early kingdoms to the modern state.',
+    'An interactive literary atlas of Gujarat — historical map, Gujarati poetry with bilingual karaoke.',
   openGraph: {
-    title: 'Gujarat — Across Time',
-    description: 'Interactive historical map of Gujarat',
+    title: 'ગુજરાત — A literary atlas',
+    description: 'Interactive literary atlas of Gujarat — map and poetry',
     type: 'website',
   },
 };
