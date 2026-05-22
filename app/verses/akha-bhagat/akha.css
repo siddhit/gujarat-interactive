@@ -165,6 +165,9 @@
   color: #6E6E92;
   font-style: italic;
 }
+.hm-value-form {
+  font-size: 20px;
+}
 
 /* Mini nav */
 #minnav {

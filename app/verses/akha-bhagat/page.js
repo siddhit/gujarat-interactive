@@ -207,7 +207,7 @@ const POEMS_RAW = {
     ],
   },
   5: {
-    titleGuj: 'ખ ́ ́ ́ ́ ́ ́ ́ ́',
+    titleGuj: 'ખટપટ',
     titleEng: 'Let the Restless Be Restless',
     tag: 'Chhappā · Viveka · Discernment',
     stanzas: [
@@ -461,6 +461,7 @@ export default function AkhaBhagat() {
     const played = playedUpTo[poemId] ?? -1;
     const prog = progress[poemId] ?? 0;
     const isPlaying = playing === poemId;
+    const hasAudio = audioAvail && !!timingsRef.current?.[poemId];
 
     return (
       <article className="poem-card" id={`poem-${poemId}`} key={poemId}>
@@ -487,7 +488,7 @@ export default function AkhaBhagat() {
               </svg>
             </button>
             <span className="play-label">Recite</span>
-            <span className="play-meta">Sarvam · Meera</span>
+            <span className="play-meta">{hasAudio ? 'Sarvam · Meera' : 'Simulated'}</span>
             <div className="icon-row">
               <button
                 className="icon-btn"
@@ -635,7 +636,7 @@ export default function AkhaBhagat() {
           <div className="hero-meta">
             <div className="hm-cell">
               <div className="hm-label">Form</div>
-              <div className="hm-value">
+              <div className="hm-value hm-value-form">
                 Chhappā <span className="small">six-line satirical verse</span>
               </div>
             </div>
