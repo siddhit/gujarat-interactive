@@ -224,8 +224,13 @@ def mp3_duration(path: Path) -> float:
     return size / 16_000
 
 
+MAX_RETRIES   = 4
+RETRY_DELAYS  = [2, 4, 8, 16]   # seconds between retries (exponential backoff)
+POEM_GAP      = 3.0              # seconds between successful poem calls
+
+
 def call_sarvam(text: str, out_path: Path) -> bool:
-    """Stream one TTS call to out_path. Returns True on success."""
+    """Stream one TTS call to out_path. Retries on rate-limit. Returns True on success."""
     headers = {
         "api-subscription-key": API_KEY,
         "Content-Type": "application/json",
@@ -240,22 +245,31 @@ def call_sarvam(text: str, out_path: Path) -> bool:
         "output_audio_codec": "mp3",
         "enable_preprocessing": True,
     }
-    try:
-        with requests.post(API_URL, headers=headers, json=payload, stream=True, timeout=60) as r:
-            if not r.ok:
-                print(f"  ✗ {r.status_code} {r.reason}: {r.text[:300]}")
-                return False
-            with open(out_path, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    if chunk:
-                        f.write(chunk)
-        return True
-    except Exception as e:
-        print(f"  ✗ Request error: {e}")
-        return False
+    for attempt in range(MAX_RETRIES):
+        try:
+            with requests.post(API_URL, headers=headers, json=payload, stream=True, timeout=60) as r:
+                if r.status_code == 429:
+                    wait = RETRY_DELAYS[min(attempt, len(RETRY_DELAYS) - 1)]
+                    print(f"  ⏳ Rate limited — waiting {wait}s then retrying (attempt {attempt+1}/{MAX_RETRIES})…")
+                    time.sleep(wait)
+                    continue
+                if not r.ok:
+                    print(f"  ✗ {r.status_code} {r.reason}: {r.text[:300]}")
+                    return False
+                with open(out_path, "wb") as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
+            return True
+        except Exception as e:
+            wait = RETRY_DELAYS[min(attempt, len(RETRY_DELAYS) - 1)]
+            print(f"  ✗ Request error: {e}  (retrying in {wait}s…)")
+            time.sleep(wait)
+    print(f"  ✗ All {MAX_RETRIES} attempts failed.")
+    return False
 
 
-def process_poem(poem_id: int, lines: list[str]) -> dict:
+def process_poem(poem_id: int, lines: list[str], force: bool = False) -> dict:
     print(f"\n── Poem {poem_id} ({len(lines)} lines) ──")
     out_mp3 = OUT_DIR / f"poem-{poem_id}.mp3"
 
@@ -263,6 +277,11 @@ def process_poem(poem_id: int, lines: list[str]) -> dict:
         print("  ⚠ SARVAM_API_KEY not set — writing estimated timings only.")
         est_total = sum(max(1, len(l)) / CHARS_PER_SECOND + PAUSE_BETWEEN_LINES for l in lines)
         return {str(poem_id): estimate_timings(lines, est_total)}
+
+    if out_mp3.exists() and not force:
+        duration = mp3_duration(out_mp3)
+        print(f"  ✓ {out_mp3.name} already exists ({duration:.1f}s) — skipping API call. Use --force to regenerate.")
+        return {str(poem_id): estimate_timings(lines, duration)}
 
     # Send whole poem as one call (newlines become natural pauses)
     full_text = "\n".join(lines)
@@ -282,20 +301,32 @@ def process_poem(poem_id: int, lines: list[str]) -> dict:
 
 
 def main():
+    import sys
+    force = "--force" in sys.argv
+
     if not API_KEY:
         print("SARVAM_API_KEY not set — only timing estimates will be written.\n"
               "Set it with:  export SARVAM_API_KEY=your_key_here")
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     print(f"Output: {OUT_DIR}")
+    if force:
+        print("--force: regenerating all poems even if mp3 already exists")
 
-    all_timings: dict = {}
-    for poem_id, lines in POEMS.items():
-        result = process_poem(poem_id, lines)
-        all_timings.update(result)
-        time.sleep(0.5)   # brief pause between poems
-
+    # Load existing timings so we preserve entries for poems we skip
     timings_path = OUT_DIR / "timings.json"
+    all_timings: dict = {}
+    if timings_path.exists():
+        try:
+            all_timings = json.loads(timings_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+    for poem_id, lines in POEMS.items():
+        result = process_poem(poem_id, lines, force=force)
+        all_timings.update(result)
+        time.sleep(POEM_GAP)
+
     timings_path.write_text(json.dumps(all_timings, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n✓ timings.json written")
     print("\nNext steps:")
