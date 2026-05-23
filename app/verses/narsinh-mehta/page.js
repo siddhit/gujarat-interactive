@@ -19,8 +19,8 @@ const POEMS_RAW = {
         { gu: 'વાચ કાછ મન નિશ્ચળ રાખે, ધન ધન જનની તેની રે', en: 'who holds word, deed and mind unwavering — blessed, blessed is their mother.', roman: 'vāca kācha mana niścaḷa rākhe, dhana dhana jananī tenī re' },
       ],
       [
-        { gu: 'સમ દ્રષ્ટિ ને તૃષ્ણા ત્યાગી, પર સ્ત્રી જેને માત રે', en: 'Who has equal sight, has shed all desire, regards another\'s woman as mother,', roman: 'sama dṛṣṭi ne tṛṣṇā tyāgī, para strī jene māta re' },
-        { gu: 'જિભ્વા થકી અસત્ય ન બોલે, પર ધન નવ ઝાલે હાથ રે', en: 'whose tongue does not form a lie, whose hand never reaches for another\'s wealth.', roman: 'jibhvā thakī asatya na bole, para dhana nava jhāle hātha re' },
+        { gu: 'સમ દ્રષ્ટિ ને તૃષ્ણા ત્યાગી, પર સ્ત્રી જેને માત રે', en: "Who has equal sight, has shed all desire, regards another's woman as mother,", roman: 'sama dṛṣṭi ne tṛṣṇā tyāgī, para strī jene māta re' },
+        { gu: 'જિભ્વા થકી અસત્ય ન બોલે, પર ધન નવ ઝાલે હાથ રે', en: "whose tongue does not form a lie, whose hand never reaches for another's wealth.", roman: 'jibhvā thakī asatya na bole, para dhana nava jhāle hātha re' },
       ],
       [
         { gu: 'મોહ માયા વ્યાપે નહિ જેને, દ્રઢ વૈરાગ્ય જેના મનમાં રે', en: 'In whom delusion and illusion find no hold, whose mind stands firm in renunciation,', roman: 'moha māyā vyāpe nahi jene, dṛḍha vairāgya jenā manamāṃ re' },
@@ -28,8 +28,8 @@ const POEMS_RAW = {
       ],
       // TODO: verify stanza 5 Gujarati text
       [
-        { gu: 'વણ-લોભી ને કપટ-રહિત, ક્રોધ-નિ-વારી ઓ ભ\'ઉ\'ઓ', en: 'Free from greed, free from deceit, who has overcome anger —', roman: 'vaṇa lobhī ne kapaṭa rahita, krodha nivārī o bha' },
-        { gu: 'ભ\'ઉ\'ઓ Narsi: evo jan ni seve, kul ekoter tarya re', en: 'Narsi says: at the feet of such a person, seventy-one generations are saved.', roman: 'bhaṇe narsī: evo jana nī seve, kula ekotera taryā re' },
+        { gu: 'વણ-લોભી ને કપટ-રહિત, ક્રોધ-નિ-વારી ઓ ભ‘ઉ‘ઓ', en: 'Free from greed, free from deceit, who has overcome anger —', roman: "vaṇa lobhī ne kapaṭa rahita, krodha nivārī o bha" },
+        { gu: 'ભ‘ઉ‘ઓ Narsi: evo jan ni seve, kul ekoter tarya re', en: 'Narsi says: at the feet of such a person, seventy-one generations are saved.', roman: 'bhaṇe narsī: evo jana nī seve, kula ekotera taryā re' },
       ],
     ],
   },
@@ -38,11 +38,11 @@ const POEMS_RAW = {
     titleEng: 'My Promissory Note',
     tag: 'Hundi · Bhakti · Narrative',
     stanzas: [
-      // Remaining stanzas to be added after text verification
       [
         { gu: 'મારી હૂંડી સ્વીકારો મહારાજ રે, શામળા ગિરધારી', en: 'Accept my promissory note, O great Lord — O dark one who lifts the hill.', roman: 'mārī hūṃḍī svīkāro mahārāja re, śāmaḷā giradhārī' },
         { gu: 'મારી હૂંડી શામળિયાને હાથ રે, શામળા ગિરધારી', en: 'My note is in the hands of Shyam — O dark one who lifts the hill.', roman: 'mārī hūṃḍī śāmaḷiyāne hātha re, śāmaḷā giradhārī' },
       ],
+      // Remaining stanzas to be added after text verification
     ],
   },
 };
@@ -321,7 +321,6 @@ export default function NarsinhMehta() {
         </div>
 
         <div className="poem-body">
-          {/* Column labels — each occupies one grid column on desktop */}
           <div className="col-label">
             ગુજરાતી{' '}
             <span style={{ color: 'rgba(110,110,146,0.6)', fontFamily: 'Inter,sans-serif', fontSize: '9px' }}>
@@ -335,7 +334,6 @@ export default function NarsinhMehta() {
             </span>
           </div>
 
-          {/* Lines — gu then en per line, so grid auto-places them into col 1 / col 2 */}
           {poem.stanzas.map((stanza, si) => (
             <Fragment key={si}>
               {si > 0 && <div className="stanza-div" />}
@@ -419,8 +417,8 @@ export default function NarsinhMehta() {
               </div>
             </div>
             <div className="hero-bio">
-              Narsinh Mehta was the <em>adi kavi</em> — the first poet — of Gujarati literature.
-              A goldsmith from Talaja in Saurashtra, he turned to Krishna in grief and composed
+              Narsinh Mehta was the <em>adi kavi</em> — the first poet — of Gujarati literature. A
+              goldsmith from Talaja in Saurashtra, he turned to Krishna in grief and composed
               hundreds of bhajans and padas. His <em>Vaishnav jan to</em> became the anthem of
               Gandhi&apos;s independence movement. His <em>Hundi</em> — a promissory note drawn on
               God — is one of the most dramatic poems of medieval India.
@@ -482,8 +480,8 @@ export default function NarsinhMehta() {
         <aside className="aside-chhapa">
           <blockquote>
             A <em>hundi</em> is a bill of exchange — a promissory note used in medieval Indian
-            trade. Narsinh Mehta, in debt for a family occasion and penniless, drew one payable
-            by God. The poem narrates how Shyam came as a merchant to honour it.
+            trade. Narsinh Mehta, in debt for a family occasion and penniless, drew one payable by
+            God. The poem narrates how Shyam came as a merchant to honour it.
           </blockquote>
         </aside>
 
@@ -530,7 +528,7 @@ export default function NarsinhMehta() {
               color: 'rgba(110,110,146,0.6)',
             }}
           >
-            Next
+            Navigation
           </span>
           <a href="/map">← Back to map</a>
         </div>
