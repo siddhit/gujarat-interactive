@@ -636,7 +636,7 @@ export default function AkhaBhagat() {
           <div className="hero-meta">
             <div className="hm-cell">
               <div className="hm-label">Form</div>
-              <div className="hm-value hm-value-form">
+              <div className="hm-value">
                 Chhappā <span className="small">six-line satirical verse</span>
               </div>
             </div>
