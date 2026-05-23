@@ -10,26 +10,36 @@ const POEMS_RAW = {
     titleEng: 'The True Vaishnav',
     tag: 'Pada · Bhakti · Ethics',
     stanzas: [
+      // Dhruva (refrain) — source: Wikipedia / Vaishnava Jana To
       [
-        { gu: 'વૈષ્ણવ જન તો તેને કહિએ, જે પીડ પરાઈ જાણે રે', en: 'Call them a Vaishnav who feels the pain of others —', roman: 'vaiṣṇava jana to tene kahie, je pīḍa parāī jāṇe re' },
-        { gu: 'પર દુઃખે ઉપકાર કરે તોયે, મન અભિમાન ન આણે રે', en: 'who helps others in suffering, yet holds no pride in mind.', roman: 'para duḥkhe upakāra kare toye, mana abhimāna na āṇe re' },
+        { gu: 'વૈષ્ણવ જન તો તેને કહિયે જે', en: 'Call them a Vaishnav —', roman: 'vaiṣṇava jana to tene kahiye je' },
+        { gu: 'પીડ પરાઈ જાણે રે', en: 'who feels the pain of others.', roman: 'pīḍa parāī jāṇe re' },
+        { gu: 'પર દુ:ખે ઉપકાર કરે તો યે', en: 'Who helps others in suffering —', roman: 'para duḥkhe upakāra kare to ye' },
+        { gu: 'મન અભિમાન ન આણે રે', en: 'yet keeps no pride in mind.', roman: 'mana abhimāna na āṇe re' },
       ],
       [
-        { gu: 'સકળ લોકમાં સહુને વંદે, નિંદા ન કરે કેની રે', en: 'Who bows before all people of the world, slanders no one,', roman: 'sakaḷa lokamāṃ sahune vaṃde, niṃdā na kare kenī re' },
-        { gu: 'વાચ કાછ મન નિશ્ચળ રાખે, ધન ધન જનની તેની રે', en: 'who holds word, deed and mind unwavering — blessed, blessed is their mother.', roman: 'vāca kācha mana niścaḷa rākhe, dhana dhana jananī tenī re' },
+        { gu: 'સકળ લોકમાં સહુને વંદે,', en: 'Who honours all people of the world,', roman: 'sakaḷa lokamāṃ sahune vaṃde' },
+        { gu: 'નિંદા ન કરે કેની રે', en: 'slanders no one.', roman: 'niṃdā na kare kenī re' },
+        { gu: 'વાચ કાછ મન નિશ્ચલ રાખે', en: 'Who holds word, deed and mind unwavering —', roman: 'vāca kācha mana niścala rākhe' },
+        { gu: 'ધન ધન જનની તેની રે', en: 'blessed, blessed is their mother.', roman: 'dhana dhana jananī tenī re' },
       ],
       [
-        { gu: 'સમ દ્રષ્ટિ ને તૃષ્ણા ત્યાગી, પર સ્ત્રી જેને માત રે', en: "Who has equal sight, has shed all desire, regards another's woman as mother,", roman: 'sama dṛṣṭi ne tṛṣṇā tyāgī, para strī jene māta re' },
-        { gu: 'જિભ્વા થકી અસત્ય ન બોલે, પર ધન નવ ઝાલે હાથ રે', en: "whose tongue does not form a lie, whose hand never reaches for another's wealth.", roman: 'jibhvā thakī asatya na bole, para dhana nava jhāle hātha re' },
+        { gu: 'સમદૃષ્ટિ ને તૃષ્ણા ત્યાગી', en: 'Who has equal sight and has shed all desire,', roman: 'samadṛṣṭi ne tṛṣṇā tyāgī' },
+        { gu: 'પરસ્ત્રી જેને માત રે', en: "regards another's woman as mother.", roman: 'parastrī jene māta re' },
+        { gu: 'જિહ્વા થકી અસત્ય ન બોલે', en: 'Whose tongue never forms a lie,', roman: 'jihvā thakī asatya na bole' },
+        { gu: 'પરધન નવ ઝાલે હાથ રે', en: "whose hand never reaches for another's wealth.", roman: 'paradhana nava jhāle hātha re' },
       ],
       [
-        { gu: 'મોહ માયા વ્યાપે નહિ જેને, દ્રઢ વૈરાગ્ય જેના મનમાં રે', en: 'In whom delusion and illusion find no hold, whose mind stands firm in renunciation,', roman: 'moha māyā vyāpe nahi jene, dṛḍha vairāgya jenā manamāṃ re' },
-        { gu: 'રામ નામ શું તાળી લાગી, સકળ તીરથ તેના તનમાં રે', en: 'who is sealed in the name of Rām — all pilgrimage lives within their body.', roman: 'rāma nāma śuṃ tāḷī lāgī, sakaḷa tīratha tenā tanamāṃ re' },
+        { gu: 'મોહ માયા વ્યાપે નહિ જેને,', en: 'In whom delusion and illusion find no hold,', roman: 'moha māyā vyāpe nahi jene' },
+        { gu: 'દૃઢ વૈરાગ્ય જેના મનમાં રે', en: 'whose mind stands firm in renunciation.', roman: 'dṛḍha vairāgya jenā manamāṃ re' },
+        { gu: 'રામ નામ શુ તાળી રે લાગી', en: 'Who is sealed in the name of Rām —', roman: 'rāma nāma śu tāḷī re lāgī' },
+        { gu: 'સકળ તીરથ તેના તનમાં રે', en: 'all pilgrimage lives within their body.', roman: 'sakaḷa tīratha tenā tanamāṃ re' },
       ],
-      // TODO: verify stanza 5 Gujarati text
       [
-        { gu: 'વણ-લોભી ને કપટ-રહિત, ક્રોધ-નિ-વારી ઓ ભ‘ઉ‘ઓ', en: 'Free from greed, free from deceit, who has overcome anger —', roman: "vaṇa lobhī ne kapaṭa rahita, krodha nivārī o bha" },
-        { gu: 'ભ‘ઉ‘ઓ Narsi: evo jan ni seve, kul ekoter tarya re', en: 'Narsi says: at the feet of such a person, seventy-one generations are saved.', roman: 'bhaṇe narsī: evo jana nī seve, kula ekotera taryā re' },
+        { gu: 'વણ લોભી ને કપટ રહિત છે,', en: 'Free from greed, free from deceit,', roman: 'vaṇa lobhī ne kapaṭa rahita che' },
+        { gu: 'કામ ક્રોધ નિવાર્યાં રે', en: 'who has overcome desire and anger.', roman: 'kāma krodha nivāryāṃ re' },
+        { gu: 'ભણે નરસૈયો તેનું દર્શન કરતાં', en: 'Says Narsaiyo: upon beholding such a person,', roman: 'bhaṇe narsaiyo tenuṃ darśana karatāṃ' },
+        { gu: 'કુળ એકોતેર તાર્યાં રે', en: 'seventy-one generations are saved.', roman: 'kuḷa ekotera tāryāṃ re' },
       ],
     ],
   },
@@ -38,11 +48,43 @@ const POEMS_RAW = {
     titleEng: 'My Promissory Note',
     tag: 'Hundi · Bhakti · Narrative',
     stanzas: [
+      // Source: tahuko.com — Narsinh Mehta ni Hundi
       [
-        { gu: 'મારી હૂંડી સ્વીકારો મહારાજ રે, શામળા ગિરધારી', en: 'Accept my promissory note, O great Lord — O dark one who lifts the hill.', roman: 'mārī hūṃḍī svīkāro mahārāja re, śāmaḷā giradhārī' },
-        { gu: 'મારી હૂંડી શામળિયાને હાથ રે, શામળા ગિરધારી', en: 'My note is in the hands of Shyam — O dark one who lifts the hill.', roman: 'mārī hūṃḍī śāmaḷiyāne hātha re, śāmaḷā giradhārī' },
+        { gu: 'મારી હૂંડી સ્વીકારો મહારાજ રે શામળા ગિરધારી,', en: 'Accept my promissory note, O great Lord — O Shyam who holds the hill,', roman: 'mārī hūṃḍī svīkāro mahārāja re śāmaḷā giradhārī' },
+        { gu: 'મારી હૂંડી શામળીયાને કાજ રે શામળા ગિરધારી!', en: 'my note is addressed to you, O dark one who lifts the hill!', roman: 'mārī hūṃḍī śāmaḷiyāne kāja re śāmaḷā giradhārī' },
       ],
-      // Remaining stanzas to be added after text verification
+      [
+        { gu: 'સ્તંભ થકી પ્રભુ પ્રગટીયા, વળી ધરિયા નરસિંહ રૂપ,', en: 'You emerged from the pillar and assumed the form of Narasimha,', roman: 'staṃbha thakī prabhu pragaṭiyā, vaḷī dhariyā narasiṃha rūpa' },
+        { gu: 'પ્રહ્લાદને ઉગારિયો…વ્હાલે માર્યો હરણાકંસ ભૂપ રે!', en: 'saved Prahlad — your beloved slew king Hiranyakashipu!', roman: 'prahlādane ugāriyoṃ… vhāle māriyo haraṇākaṃsa bhūpa re' },
+      ],
+      [
+        { gu: 'ગજને વ્હાલે ઉગારિયો વળી સુદામાની ભાંગી ભૂખ,', en: 'You saved the elephant with love and broke Sudama\'s hunger,', roman: 'gajane vhāle ugāriyoṃ vaḷī sudāmānī bhāṃgī bhūkha' },
+        { gu: 'સાચી વેળાના મારા વ્હાલમા…તમે ભક્તોને આપ્યા સુખ રે!', en: 'O my beloved who comes in the true hour — you give joy to all your devotees!', roman: 'sācī veḷānā mārā vhālamā… tame bhaktone āpyā sukha re' },
+      ],
+      [
+        { gu: 'પાંડવની પ્રતિજ્ઞા પાળી, વળી દ્રૌપદીના પૂર્યાં ચીર,', en: 'You kept the Pandavas\' oath and filled Draupadi\'s sari without end,', roman: 'pāṃḍavanī pratijñā pāḷī, vaḷī draupadīnā pūryāṃ cīra' },
+        { gu: 'નરસિંહ મહેતાની હૂંડી સ્વીકારજો…તમે સુભદ્રાબાઈના વીર રે!', en: 'accept Narsinh Mehta\'s note — O hero, brother of Subhadra!', roman: 'narasiṃha mahetānī hūṃḍī svīkārajo… tame subhadrābāīnā vīra re' },
+      ],
+      [
+        { gu: 'રહેવાને નથી ઝૂંપડું, વળી જમવા નથી જુવાર,', en: 'I have no hut to live in and no millet to eat,', roman: 'rahevāne nathī jhūṃpaḍuṃ, vaḷī jamavā nathī juvāra' },
+        { gu: 'બેટાબેટી વળાવિયા….મેં તો વળાવી ઘર કેરી નાર રે!', en: 'I have given son and daughter in marriage — and even the mistress of my house!', roman: 'beṭābeṭī vaḷāviyā… meṃ to vaḷāvī ghara kerī nāra re' },
+      ],
+      [
+        { gu: 'ગરથ મારું ગોપીચન્દન, વળી તુલસી હેમનો હાર,', en: 'My wealth is gopi-sandal paste and a garland of tulsi and gold,', roman: 'garatha māruṃ gopīcaṃdana, vaḷī tulasī hemano hāra' },
+        { gu: 'સાચું નાણું મારે શામળો….મારે મૂડીમાં ઝાંઝપખાજ રે!', en: 'my true currency is Shyam — my only capital is the cymbals and drum!', roman: 'sācuṃ nāṇuṃ māre śāmaḷo… māre mūḍīmāṃ jhāṃjhapakhāja re' },
+      ],
+      [
+        { gu: 'તીરથવાસી સૌ ચાલિયા, વળી આવ્યા નગરની બહાર,', en: 'All the pilgrims set out and came to the edge of the city,', roman: 'tīrathavāsī sau cāliyā, vaḷī āvyā nagaranī bahāra' },
+        { gu: 'વેશ લીધો વણિકનો….મારું શામળશા શેઠ એવું નામ રે!', en: 'he took the guise of a merchant — "Shamalsha Seth is my name!"', roman: 'veśa līdho vaṇikano… māruṃ śāmaḷaśā śeṭha evuṃ nāma re' },
+      ],
+      [
+        { gu: 'હૂંડી લાવો હાથમાં, વળી આપું પૂરા દામ,', en: 'Bring the note to my hand and I will pay the full sum —', roman: 'hūṃḍī lāvo hāthamāṃ, vaḷī āpuṃ pūrā dāma' },
+        { gu: 'રૂપિયા આપું રોકડા….મારું શામળશા શેઠ એવું નામ રે!', en: 'I pay in cash — "Shamalsha Seth is my name!"', roman: 'rūpiyā āpuṃ rokadā… māruṃ śāmaḷaśā śeṭha evuṃ nāma re' },
+      ],
+      [
+        { gu: 'હૂંડી સ્વીકારી વ્હાલે શામળે, વળી અરજે કીધાં કામ,', en: 'Beloved Shyam accepted the note and completed the work with grace,', roman: 'hūṃḍī svīkārī vhāle śāmaḷe, vaḷī araje kīdhāṃ kāma' },
+        { gu: 'મહેતાજી ફરી લખજો…..મુજ વાણોતર સરખાં કામ રે!', en: 'Mehtaji, write again — work of this kind is what my servant does!', roman: 'mahetājī pharī lakhajo… muja vāṇotara sarakhāṃ kāma re' },
+      ],
     ],
   },
 };
@@ -490,6 +532,22 @@ export default function NarsinhMehta() {
           <h3 className="credits-heading">Sources &amp; Credits</h3>
           <ul className="credits-list">
             <li>
+              <a
+                href="https://en.wikipedia.org/wiki/Vaishnava_Jana_To"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Wikipedia · Vaishnava Jana To
+              </a>{' '}
+              — Gujarati text of all five stanzas
+            </li>
+            <li>
+              <a href="https://tahuko.com/?p=696" target="_blank" rel="noopener noreferrer">
+                tahuko.com
+              </a>{' '}
+              — Narsinh Mehta ni Hundi (full nine stanzas)
+            </li>
+            <li>
               <a href="https://rekhtagujarati.org" target="_blank" rel="noopener noreferrer">
                 Rekhta Gujarati
               </a>{' '}
@@ -507,14 +565,14 @@ export default function NarsinhMehta() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Wikipedia
+                Wikipedia · Narsinh Mehta
               </a>{' '}
-              — Narsinh Mehta article
+              — biographical article
             </li>
           </ul>
           <p className="credits-note">
-            Vaishnav jan to stanzas 1–4 are well-attested. Stanza 5 and the complete Hundi text
-            are pending verification against a scholarly edition.
+            Poem texts sourced from Wikipedia (Vaishnava Jana To) and tahuko.com (Hundi).
+            English renderings are contextual translations, not literal.
           </p>
         </aside>
 

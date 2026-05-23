@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
 """
-generate_audio.py — Generate audio for Akha Bhagat verses via Sarvam TTS
+generate_audio.py — Generate audio for Gujarat Interactive verses via Sarvam TTS
 and write timing data for karaoke sync.
 
 Usage:
     export SARVAM_API_KEY=your_key_here
-    python scripts/generate_audio.py
+    python scripts/generate_audio.py                  # both poets
+    python scripts/generate_audio.py --poet akha      # Akha Bhagat only
+    python scripts/generate_audio.py --poet narsinh   # Narsinh Mehta only
+    python scripts/generate_audio.py --force          # regenerate even if mp3 exists
 
-Output:
-    public/verses/akha-bhagat/audio/poem-1.mp3
-    public/verses/akha-bhagat/audio/poem-2.mp3
-    public/verses/akha-bhagat/audio/poem-3.mp3
-    public/verses/akha-bhagat/audio/poem-4.mp3
-    public/verses/akha-bhagat/audio/poem-5.mp3
+Output (Akha Bhagat):
+    public/verses/akha-bhagat/audio/poem-1.mp3 … poem-5.mp3
     public/verses/akha-bhagat/audio/timings.json
+
+Output (Narsinh Mehta):
+    public/verses/narsinh-mehta/audio/poem-1.mp3
+    public/verses/narsinh-mehta/audio/poem-2.mp3
+    public/verses/narsinh-mehta/audio/timings.json
 """
 
 import base64
 import json
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -30,14 +35,18 @@ except ImportError:
 # ── Config ────────────────────────────────────────────────────────────────────
 API_KEY   = os.environ.get("SARVAM_API_KEY", "")
 API_URL   = "https://api.sarvam.ai/text-to-speech/stream"
-OUT_DIR   = Path(__file__).parent.parent / "public" / "verses" / "akha-bhagat" / "audio"
+BASE_DIR  = Path(__file__).parent.parent / "public" / "verses"
 
 # Gujarati TTS speaking rate — chars per second at pace 0.94
-CHARS_PER_SECOND = 9.5
-PAUSE_BETWEEN_LINES = 0.32   # seconds of silence between lines
+CHARS_PER_SECOND     = 9.5
+PAUSE_BETWEEN_LINES  = 0.32   # seconds of silence between lines
 
-# ── Poem data ─────────────────────────────────────────────────────────────────
-POEMS: dict[int, list[str]] = {
+MAX_RETRIES   = 4
+RETRY_DELAYS  = [2, 4, 8, 16]   # seconds between retries (exponential backoff)
+POEM_GAP      = 3.0              # seconds between successful poem calls
+
+# ── Akha Bhagat poem data ─────────────────────────────────────────────────────
+AKHA_POEMS: dict[int, list[str]] = {
     1: [
         # Stanza 1
         "તિલક કરતાં ત્રેપન થયાં,",
@@ -196,6 +205,82 @@ POEMS: dict[int, list[str]] = {
     ],
 }
 
+# ── Narsinh Mehta poem data ───────────────────────────────────────────────────
+NARSINH_POEMS: dict[int, list[str]] = {
+    1: [
+        # Vaishnav jan to — source: Wikipedia / Vaishnava Jana To
+        # Stanza 1 (dhruva / refrain)
+        "વૈષ્ણવ જન તો તેને કહિયે જે",
+        "પીડ પરાઈ જાણે રે",
+        "પર દુ:ખે ઉપકાર કરે તો યે",
+        "મન અભિમાન ન આણે રે",
+        # Stanza 2
+        "સકળ લોકમાં સહુને વંદે,",
+        "નિંદા ન કરે કેની રે",
+        "વાચ કાછ મન નિશ્ચલ રાખે",
+        "ધન ધન જનની તેની રે",
+        # Stanza 3
+        "સમદૃષ્ટિ ને તૃષ્ણા ત્યાગી",
+        "પરસ્ત્રી જેને માત રે",
+        "જિહ્વા થકી અસત્ય ન બોલે",
+        "પરધન નવ ઝાલે હાથ રે",
+        # Stanza 4
+        "મોહ માયા વ્યાપે નહિ જેને,",
+        "દૃઢ વૈરાગ્ય જેના મનમાં રે",
+        "રામ નામ શુ તાળી રે લાગી",
+        "સકળ તીરથ તેના તનમાં રે",
+        # Stanza 5 (signature)
+        "વણ લોભી ને કપટ રહિત છે,",
+        "કામ ક્રોધ નિવાર્યાં રે",
+        "ભણે નરસૈયો તેનું દર્શન કરતાં",
+        "કુળ એકોતેર તાર્યાં રે",
+    ],
+    2: [
+        # Narsinh Mehta ni Hundi — source: tahuko.com
+        # Stanza 1 (refrain)
+        "મારી હૂંડી સ્વીકારો મહારાજ રે શામળા ગિરધારી,",
+        "મારી હૂંડી શામળીયાને કાજ રે શામળા ગિરધારી!",
+        # Stanza 2 — Prahlad
+        "સ્તંભ થકી પ્રભુ પ્રગટીયા, વળી ધરિયા નરસિંહ રૂપ,",
+        "પ્રહ્લાદને ઉગારિયો…વ્હાલે માર્યો હરણાકંસ ભૂપ રે!",
+        # Stanza 3 — Gajendra & Sudama
+        "ગજને વ્હાલે ઉગારિયો વળી સુદામાની ભાંગી ભૂખ,",
+        "સાચી વેળાના મારા વ્હાલમા…તમે ભક્તોને આપ્યા સુખ રે!",
+        # Stanza 4 — Pandavas & Draupadi
+        "પાંડવની પ્રતિજ્ઞા પાળી, વળી દ્રૌપદીના પૂર્યાં ચીર,",
+        "નરસિંહ મહેતાની હૂંડી સ્વીકારજો…તમે સુભદ્રાબાઈના વીર રે!",
+        # Stanza 5 — Narsinh's poverty
+        "રહેવાને નથી ઝૂંપડું, વળી જમવા નથી જુવાર,",
+        "બેટાબેટી વળાવિયા….મેં તો વળાવી ઘર કેરી નાર રે!",
+        # Stanza 6 — his wealth
+        "ગરથ મારું ગોપીચન્દન, વળી તુલસી હેમનો હાર,",
+        "સાચું નાણું મારે શામળો….મારે મૂડીમાં ઝાંઝપખાજ રે!",
+        # Stanza 7 — God as merchant (pilgrims setting out)
+        "તીરથવાસી સૌ ચાલિયા, વળી આવ્યા નગરની બહાર,",
+        "વેશ લીધો વણિકનો….મારું શામળશા શેઠ એવું નામ રે!",
+        # Stanza 8 — God pays
+        "હૂંડી લાવો હાથમાં, વળી આપું પૂરા દામ,",
+        "રૂપિયા આપું રોકડા….મારું શામળશા શેઠ એવું નામ રે!",
+        # Stanza 9 — conclusion
+        "હૂંડી સ્વીકારી વ્હાલે શામળે, વળી અરજે કીધાં કામ,",
+        "મહેતાજી ફરી લખજો…..મુજ વાણોતર સરખાં કામ રે!",
+    ],
+}
+
+# ── Poet registry ─────────────────────────────────────────────────────────────
+POETS = {
+    "akha": {
+        "poems": AKHA_POEMS,
+        "out_dir": BASE_DIR / "akha-bhagat" / "audio",
+        "label": "Akha Bhagat",
+    },
+    "narsinh": {
+        "poems": NARSINH_POEMS,
+        "out_dir": BASE_DIR / "narsinh-mehta" / "audio",
+        "label": "Narsinh Mehta",
+    },
+}
+
 
 def estimate_timings(lines: list[str], total_seconds: float) -> list[dict]:
     """Apportion total_seconds across lines by character count."""
@@ -213,7 +298,6 @@ def estimate_timings(lines: list[str], total_seconds: float) -> list[dict]:
 
 def mp3_duration(path: Path) -> float:
     """Best-effort MP3 duration. Falls back to char-based estimate."""
-    # Try mutagen (optional)
     try:
         from mutagen.mp3 import MP3  # type: ignore
         return MP3(str(path)).info.length
@@ -222,11 +306,6 @@ def mp3_duration(path: Path) -> float:
     # Rough estimate from file size: 128 kbps → 16 000 bytes/sec
     size = path.stat().st_size
     return size / 16_000
-
-
-MAX_RETRIES   = 4
-RETRY_DELAYS  = [2, 4, 8, 16]   # seconds between retries (exponential backoff)
-POEM_GAP      = 3.0              # seconds between successful poem calls
 
 
 def call_sarvam(text: str, out_path: Path) -> bool:
@@ -269,9 +348,9 @@ def call_sarvam(text: str, out_path: Path) -> bool:
     return False
 
 
-def process_poem(poem_id: int, lines: list[str], force: bool = False) -> dict:
+def process_poem(poem_id: int, lines: list[str], out_dir: Path, force: bool = False) -> dict:
     print(f"\n── Poem {poem_id} ({len(lines)} lines) ──")
-    out_mp3 = OUT_DIR / f"poem-{poem_id}.mp3"
+    out_mp3 = out_dir / f"poem-{poem_id}.mp3"
 
     if not API_KEY:
         print("  ⚠ SARVAM_API_KEY not set — writing estimated timings only.")
@@ -280,10 +359,9 @@ def process_poem(poem_id: int, lines: list[str], force: bool = False) -> dict:
 
     if out_mp3.exists() and not force:
         duration = mp3_duration(out_mp3)
-        print(f"  ✓ {out_mp3.name} already exists ({duration:.1f}s) — skipping API call. Use --force to regenerate.")
+        print(f"  ✓ {out_mp3.name} already exists ({duration:.1f}s) — skipping. Use --force to regenerate.")
         return {str(poem_id): estimate_timings(lines, duration)}
 
-    # Send whole poem as one call (newlines become natural pauses)
     full_text = "\n".join(lines)
     print(f"  → Calling Sarvam TTS ({len(full_text)} chars)…")
     ok = call_sarvam(full_text, out_mp3)
@@ -300,21 +378,20 @@ def process_poem(poem_id: int, lines: list[str], force: bool = False) -> dict:
     return {str(poem_id): timings}
 
 
-def main():
-    import sys
-    force = "--force" in sys.argv
+def run_poet(poet_key: str, force: bool) -> None:
+    config = POETS[poet_key]
+    poems   = config["poems"]
+    out_dir = config["out_dir"]
+    label   = config["label"]
 
-    if not API_KEY:
-        print("SARVAM_API_KEY not set — only timing estimates will be written.\n"
-              "Set it with:  export SARVAM_API_KEY=your_key_here")
+    print(f"\n{'='*60}")
+    print(f"  {label}")
+    print(f"  Output: {out_dir}")
+    print(f"{'='*60}")
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    print(f"Output: {OUT_DIR}")
-    if force:
-        print("--force: regenerating all poems even if mp3 already exists")
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Load existing timings so we preserve entries for poems we skip
-    timings_path = OUT_DIR / "timings.json"
+    timings_path = out_dir / "timings.json"
     all_timings: dict = {}
     if timings_path.exists():
         try:
@@ -322,16 +399,44 @@ def main():
         except Exception:
             pass
 
-    for poem_id, lines in POEMS.items():
-        result = process_poem(poem_id, lines, force=force)
+    for poem_id, lines in poems.items():
+        result = process_poem(poem_id, lines, out_dir, force=force)
         all_timings.update(result)
         time.sleep(POEM_GAP)
 
     timings_path.write_text(json.dumps(all_timings, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\n✓ timings.json written")
+    print(f"\n✓ {timings_path} written")
+
+
+def main():
+    force = "--force" in sys.argv
+    poet_arg = None
+    for arg in sys.argv[1:]:
+        if arg == "--poet" or arg.startswith("--poet="):
+            idx = sys.argv.index(arg)
+            if "=" in arg:
+                poet_arg = arg.split("=", 1)[1]
+            elif idx + 1 < len(sys.argv):
+                poet_arg = sys.argv[idx + 1]
+
+    if not API_KEY:
+        print("SARVAM_API_KEY not set — only timing estimates will be written.\n"
+              "Set it with:  export SARVAM_API_KEY=your_key_here")
+
+    if force:
+        print("--force: regenerating all poems even if mp3 already exists")
+
+    if poet_arg:
+        if poet_arg not in POETS:
+            raise SystemExit(f"Unknown poet '{poet_arg}'. Choose from: {', '.join(POETS)}")
+        run_poet(poet_arg, force)
+    else:
+        for key in POETS:
+            run_poet(key, force)
+
     print("\nNext steps:")
-    print("  git add public/verses/akha-bhagat/audio/")
-    print("  git commit -m 'Add Sarvam TTS audio for Akha Bhagat'")
+    print("  git add public/verses/")
+    print("  git commit -m 'Add Sarvam TTS audio'")
     print("  git push")
 
 
