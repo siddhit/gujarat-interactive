@@ -107,6 +107,7 @@ export const SAMPLE_MARKERS = [
     excerpt_guj:
       'વૈષ્ણવ જન તો તેને કહીએ, જે પીડ પરાઈ જાણે રે',
     links: [
+      { label: 'Verses', url: '/verses/narsinh-mehta' },
       { label: 'Rekhta Gujarati', url: 'https://rekhtagujarati.org' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Narsinh_Mehta' },
     ],
@@ -177,6 +178,7 @@ export const SAMPLE_MARKERS = [
     excerpt_guj:
       'ઘટ ઘટ માં હરિ વ્યાપ્યો, ઘટ ઘટ માંહ્ય રહ્યો ભરપૂર',
     links: [
+      { label: 'Verses', url: '/verses/akha-bhagat' },
       { label: 'Rekhta Gujarati', url: 'https://rekhtagujarati.org' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Akho' },
     ],

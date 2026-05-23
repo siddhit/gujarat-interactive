@@ -509,10 +509,9 @@ export default function LandingPage() {
             <div className="lp-tile-eng">The Verses</div>
             <div className="lp-tile-desc">
               Gujarati poetry with bilingual karaoke — Gujarati and English side by side,
-              line by line, with recitation. Begin with Akha Bhagat, 17th-century goldsmith
-              and Vedanta sage.
+              line by line, with recitation. Two poets live: Narsinh Mehta and Akha Bhagat.
             </div>
-            <div className="lp-tile-cta">Akha Bhagat · c. 1600 CE</div>
+            <div className="lp-tile-cta">Narsinh Mehta · Akha Bhagat</div>
           </Link>
         </div>
       </section>
@@ -534,12 +533,12 @@ export default function LandingPage() {
               <div className="lp-poet-dates">c. 1498 – c. 1547</div>
               <span className="lp-poet-badge soon">Coming soon</span>
             </div>
-            <div className="lp-poet-card coming-soon">
-              <div className="lp-poet-guj">નરસિંહ</div>
+            <Link href="/verses/narsinh-mehta" className="lp-poet-card">
+              <div className="lp-poet-guj">નરસિ</div>
               <div className="lp-poet-eng">Narsinh Mehta</div>
-              <div className="lp-poet-dates">c. 1414 – c. 1481 · Junagadh</div>
-              <span className="lp-poet-badge soon">Coming soon</span>
-            </div>
+              <div className="lp-poet-dates">c. 1414 – c. 1481 · Talaja</div>
+              <span className="lp-poet-badge live">Live</span>
+            </Link>
             <div className="lp-poet-card coming-soon">
               <div className="lp-poet-guj">દયારામ</div>
               <div className="lp-poet-eng">Dayaram</div>
