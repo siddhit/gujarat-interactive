@@ -1,10 +1,12 @@
 # Gujarat — Across Time
 
-An interactive historical map of Gujarat, placing people, places, and events on the landscape across five eras — from the Solanki golden age through to the modern state.
+An interactive historical map of the Indian state of Gujarat, placing people, places, and events on the landscape across five eras — from the Solanki golden age through to the modern state.
 
-## What it is
+## What it is & Why
 
 Gujarat has a deep layered history of poets, merchants, scholars, saints, architects, and freedom fighters. This map makes that history spatial and navigable: click a marker to read about the person or place, use the era bar at the bottom to travel through time, and press ← → to step between eras.
+
+I've been wanting to dedicate some of my time to the state my grandfather migrated from and figured I could be one of many whose written or read Gujarati is not as good as their spoken Gujarati. This means a lot of literature on webpages created by previous generations are mono linguisitic will not be maintained, and their not elegantly made either. This is a way for me to contribute to this state and also let Gujaratis around the world know the translations with more accurate AI versions.
 
 ## Eras
 
@@ -28,50 +30,10 @@ Gujarat has a deep layered history of poets, merchants, scholars, saints, archit
 |-------|--------|
 | Framework | Next.js 14 — static export, deployed on Vercel |
 | Map | react-leaflet v4 + CartoDB Positron light tiles |
-| Content | Sanity CMS (falls back to bundled sample data) |
+| Geo Content | Sanity CMS (falls back to bundled sample data) |
+| Art  Content | Various Gujarati blogs | [Sarvam AI](https://sarvam.ai)
 | Fonts | Tiro Gujarati · Fraunces · Cormorant Garamond · Inter |
 | Design tokens | Rann Indigo `#11103A` · Khadi Cream `#FAF6EA` · Bandhani Crimson `#C9342A` |
-
-## Local development
-
-```bash
-npm install
-npm run dev
-```
-
-### Environment variables
-
-Create `.env.local` to connect a Sanity project:
-
-```
-NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
-NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_SANITY_WRITE_TOKEN=your_write_token   # for the report/submit form
-```
-
-Without these the app runs on bundled sample data — no setup needed to explore or develop.
-
-## Adding markers
-
-Edit `data/sampleMarkers.js`. Each marker follows this shape:
-
-```js
-{
-  _id: 'e0-p1',              // unique ID — use era prefix + type + number
-  title_guj: 'નરસિંહ મહેતા', // Gujarati title (optional)
-  title_eng: 'Narsinh Mehta',
-  type: 'person',            // person | place | event
-  eras: [0],                 // era indices — a marker can span multiple eras
-  lat: 21.7645,
-  lng: 70.4579,
-  body_eng: 'English prose...',
-  excerpt_guj: 'ગુજરાતી અવતરણ...', // optional Gujarati excerpt shown in panel
-  links: [{ label: 'Wikipedia', url: 'https://...' }],
-  status: 'published',       // 'published' | 'draft'
-}
-```
-
-Era indices: `0` Early · `1` Sultanate · `2` Mughal · `3` Company/Princely · `4` Modern
 
 ## Design
 
@@ -79,4 +41,4 @@ Visual identity from the Claude design canvas: Rann-at-dusk indigo ground, unble
 
 ## Credits
 
-Made with love and ગાઠિયા ને જલેબી · Built with [Claude](https://claude.ai) · Map tiles © [CARTO](https://carto.com) · Historical borders approximate
+Made with love and ગાઠિયા ને જલેબી · Built with [Claude](https://claude.ai) · Map tiles © [CARTO](https://carto.com) · Historical eras approximate
