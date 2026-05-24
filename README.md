@@ -31,7 +31,7 @@ I've been wanting to dedicate some of my time to the state my grandfather migrat
 | Framework | Next.js 14 — static export, deployed on Vercel |
 | Map | react-leaflet v4 + CartoDB Positron light tiles |
 | Geo Content | Sanity CMS (falls back to bundled sample data) |
-| Art  Content | Various Gujarati blogs | [Sarvam AI](https://sarvam.ai)
+| Art  Content | Various Gujarati blogs + [Sarvam AI](https://sarvam.ai)
 | Fonts | Tiro Gujarati · Fraunces · Cormorant Garamond · Inter |
 | Design tokens | Rann Indigo `#11103A` · Khadi Cream `#FAF6EA` · Bandhani Crimson `#C9342A` |
 
