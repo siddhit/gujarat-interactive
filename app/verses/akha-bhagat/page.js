@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
 import './akha.css';
+import '../folio-reader.css';
 
 // ── Poem data ─────────────────────────────────────────────────────────────────
 const POEMS_RAW = {
@@ -568,13 +569,13 @@ export default function AkhaBhagat() {
         <nav className="crumb" aria-label="Breadcrumb">
           <a href="/">Home</a>
           <span className="crumb-sep">›</span>
-          <a href="/map">Across Time</a>
+          <a href="/map">Follow a thread</a>
           <span className="crumb-sep">›</span>
           <span className="crumb-current">Poets · Akha Bhagat</span>
         </nav>
         <div className="topbar-spacer" />
         <a className="topbar-era" href="/map">
-          Middle Period · c. 1600 CE
+          Follow a thread ↗
         </a>
       </div>
 
@@ -604,7 +605,7 @@ export default function AkhaBhagat() {
           </a>
           <div className="minnav-spacer" />
           <a className="minnav-back" href="/map">
-            ← Gujarat Across Time
+            ← Follow a thread
           </a>
         </div>
       </div>
@@ -669,8 +670,7 @@ export default function AkhaBhagat() {
           <div className="banner" id="audio-banner">
             <span style={{ color: '#C49532' }}>●</span>
             <span>
-              <em>Live audio not yet generated.</em> Recitation uses an estimated cadence —
-              for native voice, run <code>scripts/generate_audio.py</code>.
+              <em>Audio is temporarily unavailable.</em> You can still follow the highlighted lines at a reading pace.
             </span>
           </div>
         )}
@@ -748,7 +748,7 @@ export default function AkhaBhagat() {
           <span style={{ fontFamily: 'Tiro Gujarati,serif', fontSize: 16, color: '#11103A' }}>
             ગુજરાત
           </span>
-          <span>· a literary atlas · in progress</span>
+          <span>· an open folio of Gujarati verse</span>
         </div>
         <div>
           Source texts public domain · Voice:{' '}

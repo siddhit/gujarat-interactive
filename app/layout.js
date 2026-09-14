@@ -1,15 +1,15 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'ગુજરાત — A literary atlas',
+  title: 'ગુજરાત — An open folio of Gujarati literature',
   description:
-    'An interactive literary atlas of Gujarat — historical map, Gujarati poetry with bilingual karaoke.',
+    'Read and listen to Gujarati poetry with contextual English renderings, then follow the ideas that connect each verse.',
   icons: {
     icon: '/favicon.svg',
   },
   openGraph: {
-    title: 'ગુજરાત — A literary atlas',
-    description: 'Interactive literary atlas of Gujarat — map and poetry',
+    title: 'ગુજરાત — An open folio of Gujarati literature',
+    description: 'Gujarati verses to read, hear, and follow from one idea to the next.',
     type: 'website',
   },
 };
