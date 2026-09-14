@@ -2,10 +2,7 @@
 
 import Link from 'next/link';
 
-export default function LandingPage() {
-  return (
-    <div className="landing-page">
-      <style>{`
+const landingPageCss = `
         .landing-page * { box-sizing: border-box; }
         .landing-page { background: #FAF6EA; color: #1A1A48; font-family: 'Cormorant Garamond', serif; }
         .landing-page a { color: inherit; }
@@ -63,7 +60,21 @@ export default function LandingPage() {
         }
 
         /* ── Hero ─────────────────────────────────────────────── */
+        .lp-hero-wrap {
+          position: relative;
+          background-image: var(--patola-bg-light);
+          background-size: 40px 40px;
+          background-position: center;
+        }
+        .lp-hero-wrap::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, #FAF6EA 0%, rgba(250,246,234,0.88) 55%, #FAF6EA 100%);
+          pointer-events: none;
+        }
         .lp-hero {
+          position: relative;
           padding: 96px 28px 80px;
           max-width: 1240px;
           margin: 0 auto;
@@ -233,6 +244,9 @@ export default function LandingPage() {
           transition: opacity 0.3s;
         }
         .lp-tile:hover .lp-tile-accent { opacity: 1; }
+        .lp-tile.teal .lp-tile-accent { background: #1B5A66; }
+        .lp-tile.teal .lp-tile-cta { color: #1B5A66; }
+        .lp-tile.teal:hover { box-shadow: 0 8px 32px rgba(27,90,102,0.12); }
         .lp-tile-num {
           position: absolute;
           top: 24px;
@@ -248,9 +262,17 @@ export default function LandingPage() {
           user-select: none;
         }
 
+        /* ── Weave divider (Patola zigzag trim) ─────────────────── */
+        .lp-weave {
+          height: 18px;
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='18' viewBox='0 0 32 18'><path d='M0 4 L8 14 L16 4 L24 14 L32 4' fill='none' stroke='%23C49532' stroke-width='1.6' stroke-linecap='round' opacity='0.9'/><path d='M0 14 L8 4 L16 14 L24 4 L32 14' fill='none' stroke='%23C9342A' stroke-width='1.6' stroke-linecap='round' opacity='0.55'/></svg>");
+          background-repeat: repeat-x;
+          background-position: center;
+          background-size: 32px 18px;
+        }
+
         /* ── Poets strip ──────────────────────────────────────── */
         .lp-poets-section {
-          border-top: 1px solid rgba(26,26,72,0.1);
           border-bottom: 1px solid rgba(26,26,72,0.1);
           background: #F5EFE2;
           padding: 64px 28px;
@@ -404,7 +426,12 @@ export default function LandingPage() {
           color: #11103A;
           line-height: 1;
         }
-      `}</style>
+`;
+
+export default function LandingPage() {
+  return (
+    <div className="landing-page">
+      <style dangerouslySetInnerHTML={{ __html: landingPageCss }} />
 
       {/* ── Topbar ── */}
       <header className="lp-topbar">
@@ -420,7 +447,7 @@ export default function LandingPage() {
       </header>
 
       {/* ── Hero ── */}
-      <section style={{borderBottom:'1px solid rgba(26,26,72,0.08)'}}>
+      <section className="lp-hero-wrap" style={{borderBottom:'1px solid rgba(26,26,72,0.08)'}}>
         <div className="lp-hero">
           <div>
             <div className="lp-hero-kicker">A literary atlas</div>
@@ -502,7 +529,7 @@ export default function LandingPage() {
             </div>
             <div className="lp-tile-cta">Gujarat Across Time</div>
           </Link>
-          <Link href="/verses/akha-bhagat" className="lp-tile">
+          <Link href="/verses/akha-bhagat" className="lp-tile teal">
             <div className="lp-tile-accent" />
             <div className="lp-tile-num">II</div>
             <div className="lp-tile-guj">કાવ્ય</div>
@@ -515,6 +542,9 @@ export default function LandingPage() {
           </Link>
         </div>
       </section>
+
+      {/* ── Weave divider ── */}
+      <div className="lp-weave" role="presentation" />
 
       {/* ── Poets strip ── */}
       <section className="lp-poets-section">
